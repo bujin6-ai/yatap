@@ -839,6 +839,36 @@ function lbPrev() { lbIdx=(lbIdx-1+lbPhotos.length)%lbPhotos.length; showLb(); }
 function lbNext() { lbIdx=(lbIdx+1)%lbPhotos.length; showLb(); }
 $('lb').addEventListener('click', function(e){ if(e.target===this) closeLb(); });
 
+// 좌우 스와이프로 사진 넘기기
+(function(){
+  var sx=0, sy=0, st=0, moved=false;
+  var lb = $('lb');
+  lb.addEventListener('touchstart', function(e){
+    if(e.touches.length!==1) return;
+    sx=e.touches[0].clientX; sy=e.touches[0].clientY; st=Date.now(); moved=false;
+  }, {passive:true});
+  lb.addEventListener('touchmove', function(e){
+    if(e.touches.length!==1) return;
+    if(Math.abs(e.touches[0].clientX-sx)>10 || Math.abs(e.touches[0].clientY-sy)>10) moved=true;
+  }, {passive:true});
+  lb.addEventListener('touchend', function(e){
+    if(!moved) return;
+    var t=e.changedTouches[0];
+    var dx=t.clientX-sx, dy=t.clientY-sy, dt=Date.now()-st;
+    // 가로 스와이프 (세로보다 가로 이동이 크고, 50px 이상, 1초 이내)
+    if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.2 && dt<1000){
+      if(dx<0) lbNext(); else lbPrev();
+    }
+  }, {passive:true});
+  // 데스크톱: 키보드 좌우 화살표
+  document.addEventListener('keydown', function(e){
+    if($('lb').style.display==='none' || $('lb').style.display==='') return;
+    if(e.key==='ArrowLeft') lbPrev();
+    else if(e.key==='ArrowRight') lbNext();
+    else if(e.key==='Escape') closeLb();
+  });
+})();
+
 // ADMIN
 function openAdmin() {
   $('adminOverlay').style.display='flex';
