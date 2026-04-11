@@ -351,20 +351,15 @@ function updateProg() {
   document.getElementById('progPct').textContent = pct+'%';
   document.getElementById('progFill').style.width = pct+'%';
 }
-var lastLoadTime = 0;
 function goHome() {
   S.mode = 'home';
-  // 항상 캐시로 즉시 렌더 (로딩 화면 X)
+  // 캐시로 즉시 렌더 (로딩 화면 X)
   render();
-  // 30초 이상 지났으면 백그라운드에서 서버 갱신
-  var now = Date.now();
-  if (now - lastLoadTime > 30000) {
-    lastLoadTime = now;
-    loadState().then(function(){
-      saveCache();
-      if (S.mode === 'home') render();
-    });
-  }
+  // 항상 백그라운드에서 서버 갱신 → 다른 기기 제출 즉시 반영
+  loadState().then(function(){
+    saveCache();
+    if (S.mode === 'home') render();
+  });
 }
 function saveCache() {
   try { localStorage.setItem('kims_state_cache', JSON.stringify({submissions:SS.submissions, cats:CATS})); } catch(e) {}
@@ -653,7 +648,7 @@ function submitAm() {
   render();
   // 백그라운드 전송
   postSheet(payload, function(){
-    lastLoadTime=0; loadState().then(function(){saveCache();if(S.mode==='home')render();});
+    loadState().then(function(){saveCache();if(S.mode==='home')render();});
   }, function(){ console.log('submit failed, will retry'); });
 }
 
@@ -934,10 +929,29 @@ S.mode = 'home';
 render();              // 캐시 기준으로 바로 화면 표시
 
 // 백그라운드에서 서버 갱신 (첫 진입 1회)
-lastLoadTime = Date.now();
 loadState().then(function(){
   saveCache();
   if (S.mode === 'home') render();
+});
+
+// 홈 화면에서 20초마다 자동 동기화 → 다른 기기 제출 자동 반영
+setInterval(function(){
+  if (S.mode === 'home' && document.visibilityState !== 'hidden') {
+    loadState().then(function(){
+      saveCache();
+      if (S.mode === 'home') render();
+    });
+  }
+}, 20000);
+
+// 앱이 백그라운드에서 다시 돌아왔을 때 즉시 동기화
+document.addEventListener('visibilitychange', function(){
+  if (document.visibilityState === 'visible' && S.mode === 'home') {
+    loadState().then(function(){
+      saveCache();
+      if (S.mode === 'home') render();
+    });
+  }
 });
 </script>
 </body>
