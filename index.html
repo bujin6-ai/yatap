@@ -319,7 +319,7 @@ function compressImg(dataUrl, maxW, maxH, q, cb) {
 
 // 앱 상태
 var S = {
-  mode: 'loading',
+  mode: 'home',
   date: new Date().toISOString().slice(0,10),
   name: '',
   part: null, ans: {}, memo: {},
@@ -354,13 +354,16 @@ function updateProg() {
 var lastLoadTime = 0;
 function goHome() {
   S.mode = 'home';
+  // 항상 캐시로 즉시 렌더 (로딩 화면 X)
+  render();
+  // 30초 이상 지났으면 백그라운드에서 서버 갱신
   var now = Date.now();
-  // 30초 이내 재방문이면 캐시 사용, 아니면 서버 갱신
   if (now - lastLoadTime > 30000) {
     lastLoadTime = now;
-    loadState().then(function(){ saveCache(); render(); });
-  } else {
-    render();
+    loadState().then(function(){
+      saveCache();
+      if (S.mode === 'home') render();
+    });
   }
 }
 function saveCache() {
@@ -715,12 +718,11 @@ function showRecords() {
   });
 }
 function drawRecs() {
-  var from = addDays(S.recDate, -2);
-  var recs = SS.records.filter(function(r){ var d=normDate(r.date); return d>=from && d<=S.recDate; });
+  var recs = SS.records.filter(function(r){ return normDate(r.date) === S.recDate; });
   var html = '<div class="rec-filter">'
-    +'<span class="rec-filter-lbl">기준일</span>'
+    +'<span class="rec-filter-lbl">조회일</span>'
     +'<input type="date" class="rec-filter-inp" value="'+S.recDate+'" onchange="S.recDate=this.value;drawRecs()">'
-    +'<span style="font-size:11px;color:#888;white-space:nowrap">최근 3일</span></div>';
+    +'<span style="font-size:11px;color:#888;white-space:nowrap">선택일만</span></div>';
   if (!recs.length) {
     html += '<div class="rec-empty"><div class="rec-empty-icon">📋</div><div>해당 기간에 기록이 없습니다</div></div>';
   } else {
@@ -926,15 +928,13 @@ function loadCached() {
     }
   } catch(e) {}
 }
-function saveCache() {
-  try { localStorage.setItem('kims_state_cache', JSON.stringify({submissions:SS.submissions, cats:CATS})); } catch(e) {}
-}
 
 loadCached();          // 캐시 즉시 로드
 S.mode = 'home';
 render();              // 캐시 기준으로 바로 화면 표시
 
-// 백그라운드에서 서버 갱신
+// 백그라운드에서 서버 갱신 (첫 진입 1회)
+lastLoadTime = Date.now();
 loadState().then(function(){
   saveCache();
   if (S.mode === 'home') render();
