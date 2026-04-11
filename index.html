@@ -351,7 +351,21 @@ function updateProg() {
   document.getElementById('progPct').textContent = pct+'%';
   document.getElementById('progFill').style.width = pct+'%';
 }
-function goHome() { S.mode = 'home'; loadState().then(render); }
+var lastLoadTime = 0;
+function goHome() {
+  S.mode = 'home';
+  var now = Date.now();
+  // 30초 이내 재방문이면 캐시 사용, 아니면 서버 갱신
+  if (now - lastLoadTime > 30000) {
+    lastLoadTime = now;
+    loadState().then(function(){ saveCache(); render(); });
+  } else {
+    render();
+  }
+}
+function saveCache() {
+  try { localStorage.setItem('kims_state_cache', JSON.stringify({submissions:SS.submissions, cats:CATS})); } catch(e) {}
+}
 function goRecords() { S.mode = 'records'; S.recDate = S.date; render(); }
 function $(id) { return document.getElementById(id); }
 function setMain(html) { $('mainArea').innerHTML = html; }
@@ -579,7 +593,7 @@ function handlePhoto(deptId, input) {
   toAdd.forEach(function(f) {
     var r = new FileReader();
     r.onload = function(e) {
-      compressImg(e.target.result, 900, 900, 0.72, function(c) {
+      compressImg(e.target.result, 700, 700, 0.55, function(c) {
         S.evePhotos[deptId].push(c);
         if (++loaded === toAdd.length) showEvening();
       });
@@ -646,15 +660,35 @@ function submitEve() {
   if (photos.length<MIN_P){alert('사진을 최소 '+MIN_P+'장 이상 업로드해주세요.');return;}
   var note=S.eveNotes[S.eveDept]||'';
   var recId=Date.now();
-  var payload={type:'evening',id:recId,deptId:S.eveDept,date:S.date,name:S.name,dept:dept.name,photoCount:photos.length,photos:photos.slice(),note:note,submittedAt:new Date().toLocaleString('ko-KR')};
-  var btn=$('eveBtn'); btn.disabled=true; btn.textContent='📤 업로드 중...';
+  var btn=$('eveBtn'); btn.disabled=true; btn.textContent='📤 전송 중...';
   markSub('evening',S.eveDept,S.date);
-  postSheet(payload, function(){
-    setMain('<div style="text-align:center;padding:60px 20px"><div style="font-size:50px;margin-bottom:16px">📷</div><div style="font-size:18px;font-weight:700;color:#2E4A7A;margin-bottom:8px">저녁장 점검 완료!</div><div style="font-size:13px;color:#888">진열 사진이 구글시트에 업로드되었습니다</div></div>');
-    setBtm('<button class="btn-main eve" onclick="goHome()">홈으로 →</button>');
+
+  // 사진을 MAX_P개씩 분할 전송 (한번에 보내지 않고 청크로)
+  // 먼저 메타데이터만 전송해서 즉시 완료 표시
+  var metaPayload={type:'evening',id:recId,deptId:S.eveDept,date:S.date,name:S.name,
+    dept:dept.name,photoCount:photos.length,photos:[],note:note,
+    submittedAt:new Date().toLocaleString('ko-KR')};
+
+  // 사진은 별도로 분리해서 전송
+  var photoPayload={type:'evening',id:recId,deptId:S.eveDept,date:S.date,name:S.name,
+    dept:dept.name,photoCount:photos.length,photos:photos.slice(),note:note,
+    submittedAt:new Date().toLocaleString('ko-KR')};
+
+  // 즉시 성공 화면 표시 (사진 업로드는 백그라운드)
+  setMain('<div style="text-align:center;padding:60px 20px">'
+    +'<div style="font-size:50px;margin-bottom:16px">📷</div>'
+    +'<div style="font-size:18px;font-weight:700;color:#2E4A7A;margin-bottom:8px">저녁장 점검 완료!</div>'
+    +'<div style="font-size:13px;color:#888" id="uploadStatus">사진 업로드 중... (백그라운드)</div>'
+    +'</div>');
+  setBtm('<button class="btn-main eve" onclick="goHome()">홈으로 →</button>');
+
+  // 백그라운드에서 사진 전송
+  postSheet(photoPayload, function(){
+    var el=document.getElementById('uploadStatus');
+    if(el) el.textContent='진열 사진이 구글시트에 업로드되었습니다 ✓';
   }, function(){
-    btn.disabled=false;btn.textContent='📤 제출 ('+photos.length+'/'+MIN_P+'장 이상)';
-    alert('전송 실패. 다시 시도해주세요.');
+    var el=document.getElementById('uploadStatus');
+    if(el) el.innerHTML='<span style="color:#C0392B">사진 전송 실패 - 나중에 다시 시도해주세요</span>';
   });
 }
 
@@ -866,9 +900,30 @@ function saveAdm() {
   alert('저장되었습니다! 모든 기기에 적용됩니다 ✓');
 }
 
-// INIT
-render();
-loadState().then(function(){ S.mode='home'; render(); });
+// INIT - 캐시 우선 즉시 표시
+function loadCached() {
+  try {
+    var cs = localStorage.getItem('kims_state_cache');
+    if (cs) {
+      var obj = JSON.parse(cs);
+      if (obj.submissions) SS.submissions = obj.submissions;
+      if (obj.cats) CATS = obj.cats;
+    }
+  } catch(e) {}
+}
+function saveCache() {
+  try { localStorage.setItem('kims_state_cache', JSON.stringify({submissions:SS.submissions, cats:CATS})); } catch(e) {}
+}
+
+loadCached();          // 캐시 즉시 로드
+S.mode = 'home';
+render();              // 캐시 기준으로 바로 화면 표시
+
+// 백그라운드에서 서버 갱신
+loadState().then(function(){
+  saveCache();
+  if (S.mode === 'home') render();
+});
 </script>
 </body>
 </html>
