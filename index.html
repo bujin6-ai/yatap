@@ -643,15 +643,15 @@ function submitAm() {
   var payload={type:'morning',id:recId,partId:S.part,date:S.date,name:S.name,part:part.name,score:score,submittedAt:new Date().toLocaleString('ko-KR'),items:rows};
   showSubBox('loading','⏳','전송 중...','구글시트에 기록하고 있습니다');
   $('submitBtn').disabled=true;
+  // 즉시 홈으로 이동
   markSub('morning',S.part,S.date);
+  var savedPart=S.part;
+  S.mode='home'; S.part=null; S.ans={}; S.memo={};
+  render();
+  // 백그라운드 전송
   postSheet(payload, function(){
-    showSubBox('ok','✅','제출 완료!','구글시트에 정상적으로 기록되었습니다');
-    var btn=$('submitBtn'); if(btn){btn.textContent='✓ 제출 완료';btn.disabled=true;}
-    setTimeout(function(){S.mode='home';S.part=null;S.ans={};S.memo={};loadState().then(render);},2500);
-  }, function(){
-    showSubBox('err','❌','전송 실패','네트워크를 확인하고 다시 시도해주세요');
-    var btn=$('submitBtn'); if(btn){btn.textContent='📤 다시 시도';btn.disabled=false;}
-  });
+    lastLoadTime=0; loadState().then(function(){saveCache();if(S.mode==='home')render();});
+  }, function(){ console.log('submit failed, will retry'); });
 }
 
 function submitEve() {
@@ -693,11 +693,26 @@ function submitEve() {
 }
 
 // RECORDS
+function loadRecCache() {
+  try {
+    var cr = localStorage.getItem('kims_rec_cache');
+    if (cr) { SS.records = JSON.parse(cr).map(function(r){r.date=normDate(r.date);return r;}); }
+  } catch(e) {}
+}
+function saveRecCache() {
+  try { localStorage.setItem('kims_rec_cache', JSON.stringify(SS.records)); } catch(e) {}
+}
 function showRecords() {
   $('hdrInfo').innerHTML = '<strong>제출 기록</strong>야탑점';
-  setMain('<div class="loading-screen"><div class="spinner"></div><div class="loading-txt">기록 불러오는 중...</div></div>');
   setBtm('<button class="btn-main" onclick="goHome()">← 홈으로</button>');
-  loadRecords().then(function(){ if(S.mode==='records') drawRecs(); });
+  // 캐시 즉시 표시
+  loadRecCache();
+  drawRecs();
+  // 백그라운드 서버 갱신
+  loadRecords().then(function(){
+    saveRecCache();
+    if(S.mode==='records') drawRecs();
+  });
 }
 function drawRecs() {
   var from = addDays(S.recDate, -2);
