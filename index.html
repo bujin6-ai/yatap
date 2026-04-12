@@ -800,16 +800,27 @@ function showAmDet(rec) {
     catHtml+='<div class="rpt-card"><div class="rpt-title">'+esc(cn)+'</div>';
     for(var j=0;j<items.length;j++){
       var item=items[j];
-      // 서버/시트에서 필드명이 바뀌어 저장될 수 있으므로 다양한 키 확인
-      var raw = item.ans || item.answer || item.result || item['평가'] || item.value || '';
-      raw = String(raw).trim();
-      var isGood = raw==='good'||raw==='양호'||raw.indexOf('양호')>=0;
-      var isWarn = raw==='warn'||raw==='주의'||raw.indexOf('주의')>=0;
-      var isBad  = raw==='bad' ||raw==='불량'||raw.indexOf('불량')>=0;
+      // 필드명이 '결과'/'ans'/'answer' 등 무엇이든 상관없이 '값'으로 스캔
+      var raw='', qtext='';
+      for(var key in item){
+        var v=String(item[key]==null?'':item[key]).trim();
+        if(!raw && (v==='good'||v==='warn'||v==='bad'||v==='양호'||v==='주의'||v==='불량'||v==='미입력')) raw=v;
+      }
+      // 질문 텍스트: item/question/q/항목 등 다양한 키 대응 + 길이가 제일 긴 문자열을 질문으로 추정 (메모·결과 제외)
+      qtext = item.item||item.question||item.q||item['항목']||'';
+      if(!qtext){
+        for(var key2 in item){
+          var vv=String(item[key2]==null?'':item[key2]);
+          if(vv.length>qtext.length && vv!==raw && vv!==(item.memo||'') && vv!==(item.cat||'')) qtext=vv;
+        }
+      }
+      var isGood = raw==='good'||raw==='양호';
+      var isWarn = raw==='warn'||raw==='주의';
+      var isBad  = raw==='bad' ||raw==='불량';
       var al = isGood?'양호':isWarn?'주의':isBad?'불량':'미입력';
       var ac = isGood?'ans-g':isWarn?'ans-w':isBad?'ans-b':'ans-n';
-      if(j===0 && i===0) console.log('[DEBUG] 첫 항목 전체:', JSON.stringify(item));
-      catHtml+='<div class="det-row"><span class="det-num">'+(j+1)+'</span><span class="det-q">'+esc(item.item||item.question||item.q||'')+'</span><span class="det-ans '+ac+'">'+al+'</span></div>'+(item.memo?'<div class="det-memo">↳ '+esc(item.memo)+'</div>':'');
+      if(j===0 && i===0) console.log('[DEBUG] 첫 항목:', JSON.stringify(item), '→ raw=', raw);
+      catHtml+='<div class="det-row"><span class="det-num">'+(j+1)+'</span><span class="det-q">'+esc(qtext)+'</span><span class="det-ans '+ac+'">'+al+'</span></div>'+(item.memo?'<div class="det-memo">↳ '+esc(item.memo)+'</div>':'');
     }
     catHtml+='</div>';
   }
