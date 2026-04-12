@@ -794,6 +794,11 @@ function showAmDet(rec) {
   var catMap={};
   (rec.items||[]).forEach(function(item){ if(!catMap[item.cat])catMap[item.cat]=[]; catMap[item.cat].push(item); });
   var catHtml='';
+  // 진단용: 첫 항목 원시 데이터 화면 표시
+  if((rec.items||[]).length>0){
+    catHtml += '<div style="background:#FFF3CD;border:1px solid #F39C12;border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;color:#7D6608;word-break:break-all;font-family:monospace">'
+      + '<strong>🔍 진단:</strong><br>items 길이: '+rec.items.length+'<br>첫 항목 키: '+Object.keys(rec.items[0]).join(', ')+'<br>첫 항목 값: '+esc(JSON.stringify(rec.items[0]))+'</div>';
+  }
   var catNames=Object.keys(catMap);
   for(var i=0;i<catNames.length;i++){
     var cn=catNames[i], items=catMap[cn];
