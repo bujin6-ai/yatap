@@ -252,7 +252,8 @@ var EVE_DEPTS = [
 
 // 서버 공유 상태
 var SS = { submissions:{}, records:[] };
-var CATS = JSON.parse(JSON.stringify(DEF_CATS));
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+var CATS = clone(DEF_CATS);
 
 function apiGET(action) {
   return fetch(URL_SHEET + '?action=' + action, {method:'GET'})
@@ -274,22 +275,33 @@ function loadRecords() {
       SS.records = (d.records || []).map(function(r) {
         r.date = normDate(r.date);
         return r;
+      }).sort(function(a,b){
+        // 최신 제출이 위로 오도록 정렬
+        var ad=(a.date||'')+' '+(a.submittedAt||'');
+        var bd=(b.date||'')+' '+(b.submittedAt||'');
+        return bd.localeCompare(ad);
       });
     }
   }).catch(function(e){ console.log('loadRecords fail', e); SS.records = []; });
 }
 
+function fmtLocal(d){
+  return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+}
 function normDate(raw) {
   if (!raw) return '';
   var s = String(raw).trim().replace(/^'+/,'');
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
   var m = s.match(/(\d{4})[.\s]+(\d{1,2})[.\s]+(\d{1,2})/);
   if (m) return m[1] + '-' + ('0'+m[2]).slice(-2) + '-' + ('0'+m[3]).slice(-2);
-  try { var d = new Date(s); if (!isNaN(d.getTime())) return d.toISOString().slice(0,10); } catch(e) {}
+  try { var d = new Date(s); if (!isNaN(d.getTime())) return fmtLocal(d); } catch(e) {}
   return s;
 }
 function addDays(ds, n) {
-  var d = new Date(ds); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10);
+  var p = ds.split('-');
+  var d = new Date(+p[0], +p[1]-1, +p[2]);
+  d.setDate(d.getDate()+n);
+  return fmtLocal(d);
 }
 function isSub(type, pid, date) {
   return !!(SS.submissions[date] && SS.submissions[date][type] && SS.submissions[date][type][pid]);
@@ -301,6 +313,11 @@ function markSub(type, pid, date) {
 }
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+// 로컬(한국) 기준 YYYY-MM-DD — toISOString()은 UTC라 한국 오전엔 전날이 나옴
+function todayLocal(){
+  var d = new Date();
+  return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
 }
 function loadPwd() { return localStorage.getItem('kims_pwd') || '1234'; }
 function compressImg(dataUrl, maxW, maxH, q, cb) {
@@ -320,14 +337,14 @@ function compressImg(dataUrl, maxW, maxH, q, cb) {
 // 앱 상태
 var S = {
   mode: 'home',
-  date: new Date().toISOString().slice(0,10),
+  date: todayLocal(),
   name: '',
   part: null, ans: {}, memo: {},
   eveDept: null,
   evePhotos: {farm:[], sea:[], meat:[], grocery:[]},
   eveNotes:  {farm:'', sea:'', meat:'', grocery:''},
   detailRec: null,
-  recDate: new Date().toISOString().slice(0,10)
+  recDate: todayLocal()
 };
 var adminAuthed = false, editCats = {};
 var lbPhotos = [], lbIdx = 0;
@@ -891,7 +908,7 @@ function chkPwd() {
 }
 function renderAdm() {
   loadState().then(function(){
-    editCats=JSON.parse(JSON.stringify(CATS));
+    editCats=clone(CATS);
     var catHtml='';
     var catIds=Object.keys(editCats);
     for(var i=0;i<catIds.length;i++){
@@ -933,10 +950,8 @@ function saveAdm() {
     for(var j=0;j<inputs.length;j++) editCats[catId].items[j]=inputs[j].value.trim();
     editCats[catId].items=editCats[catId].items.filter(function(v){return v!=='';});
   }
-  CATS=JSON.parse(JSON.stringify(editCats));
-  var body=JSON.stringify({type:'save_cats',cats:CATS});
-  fetch(URL_SHEET,{method:'POST',headers:{'Content-Type':'text/plain'},body:body})
-    .catch(function(){fetch(URL_SHEET,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:body}).catch(function(){});});
+  CATS=clone(editCats);
+  postSheet({type:'save_cats',cats:CATS}, function(){}, function(){});
   closeAdmin();
   loadState().then(render);
   alert('저장되었습니다! 모든 기기에 적용됩니다 ✓');
