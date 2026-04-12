@@ -800,14 +800,16 @@ function showAmDet(rec) {
     catHtml+='<div class="rpt-card"><div class="rpt-title">'+esc(cn)+'</div>';
     for(var j=0;j<items.length;j++){
       var item=items[j];
-      // 저장 형식: 한글 라벨("양호/주의/불량/미입력") 또는 영문 코드("good/warn/bad") 둘 다 지원
-      var a=item.ans||'';
-      var isGood = a==='good'||a==='양호';
-      var isWarn = a==='warn'||a==='주의';
-      var isBad  = a==='bad' ||a==='불량';
+      // 서버/시트에서 필드명이 바뀌어 저장될 수 있으므로 다양한 키 확인
+      var raw = item.ans || item.answer || item.result || item['평가'] || item.value || '';
+      raw = String(raw).trim();
+      var isGood = raw==='good'||raw==='양호'||raw.indexOf('양호')>=0;
+      var isWarn = raw==='warn'||raw==='주의'||raw.indexOf('주의')>=0;
+      var isBad  = raw==='bad' ||raw==='불량'||raw.indexOf('불량')>=0;
       var al = isGood?'양호':isWarn?'주의':isBad?'불량':'미입력';
       var ac = isGood?'ans-g':isWarn?'ans-w':isBad?'ans-b':'ans-n';
-      catHtml+='<div class="det-row"><span class="det-num">'+(j+1)+'</span><span class="det-q">'+esc(item.item)+'</span><span class="det-ans '+ac+'">'+al+'</span></div>'+(item.memo?'<div class="det-memo">↳ '+esc(item.memo)+'</div>':'');
+      if(j===0 && i===0) console.log('[DEBUG] 첫 항목 전체:', JSON.stringify(item));
+      catHtml+='<div class="det-row"><span class="det-num">'+(j+1)+'</span><span class="det-q">'+esc(item.item||item.question||item.q||'')+'</span><span class="det-ans '+ac+'">'+al+'</span></div>'+(item.memo?'<div class="det-memo">↳ '+esc(item.memo)+'</div>':'');
     }
     catHtml+='</div>';
   }
