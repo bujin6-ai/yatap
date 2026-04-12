@@ -196,6 +196,7 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 .btn-pwd{width:100%;max-width:260px;height:44px;background:#D0021B;color:#FFF;border:none;border-radius:10px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
 .pwd-err{font-size:13px;color:#C0392B;display:none}
 .pwd-err.show{display:block}
+.jbj-mark{position:fixed;right:12px;bottom:76px;z-index:50;opacity:.45;pointer-events:none}.jbj-mark img{width:44px;height:auto;display:block;border-radius:4px}
 </style>
 </head>
 <body>
@@ -212,6 +213,7 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
   <div class="prog-bg"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
 </div>
 <main id="mainArea"></main>
+<div class="jbj-mark"><img src="data:image/png;base64,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" alt="JBJ"></div>
 <div class="btm" id="btm" style="display:none">
   <div class="btm-in" id="btmIn"></div>
 </div>
@@ -622,14 +624,12 @@ function openLbLocal(idx) { lbPhotos = S.evePhotos[S.eveDept] || []; lbIdx=idx; 
 
 // SUBMIT
 function postSheet(payload, onOk, onFail) {
+  // no-cors 한 번만 전송 → 중복 저장 방지
+  // (응답은 읽을 수 없지만 요청은 서버에 도달함, Apps Script는 id로 중복 방지)
   var body = JSON.stringify(payload);
-  fetch(URL_SHEET, {method:'POST', headers:{'Content-Type':'text/plain'}, body:body})
-    .then(function(r){return r.json();})
-    .then(function(d){ if(d&&d.status==='ok') onOk(); else throw new Error(d?d.message:''); })
-    .catch(function() {
-      fetch(URL_SHEET, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:body})
-        .then(function(){ onOk(); }).catch(function(){ onFail(); });
-    });
+  fetch(URL_SHEET, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:body})
+    .then(function(){ if(onOk) onOk(); })
+    .catch(function(){ if(onFail) onFail(); });
 }
 function showSubBox(type, icon, msg, sub) {
   var box=$('subBox'); if(!box) return;
@@ -794,11 +794,6 @@ function showAmDet(rec) {
   var catMap={};
   (rec.items||[]).forEach(function(item){ if(!catMap[item.cat])catMap[item.cat]=[]; catMap[item.cat].push(item); });
   var catHtml='';
-  // 진단용: 첫 항목 원시 데이터 화면 표시
-  if((rec.items||[]).length>0){
-    catHtml += '<div style="background:#FFF3CD;border:1px solid #F39C12;border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;color:#7D6608;word-break:break-all;font-family:monospace">'
-      + '<strong>🔍 진단:</strong><br>items 길이: '+rec.items.length+'<br>첫 항목 키: '+Object.keys(rec.items[0]).join(', ')+'<br>첫 항목 값: '+esc(JSON.stringify(rec.items[0]))+'</div>';
-  }
   var catNames=Object.keys(catMap);
   for(var i=0;i<catNames.length;i++){
     var cn=catNames[i], items=catMap[cn];
@@ -824,7 +819,6 @@ function showAmDet(rec) {
       var isBad  = raw==='bad' ||raw==='불량';
       var al = isGood?'양호':isWarn?'주의':isBad?'불량':'미입력';
       var ac = isGood?'ans-g':isWarn?'ans-w':isBad?'ans-b':'ans-n';
-      if(j===0 && i===0) console.log('[DEBUG] 첫 항목:', JSON.stringify(item), '→ raw=', raw);
       catHtml+='<div class="det-row"><span class="det-num">'+(j+1)+'</span><span class="det-q">'+esc(qtext)+'</span><span class="det-ans '+ac+'">'+al+'</span></div>'+(item.memo?'<div class="det-memo">↳ '+esc(item.memo)+'</div>':'');
     }
     catHtml+='</div>';
