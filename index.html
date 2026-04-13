@@ -656,6 +656,9 @@ function submitAm() {
   var score=ans_vals.length>0?Math.round(good_cnt/ans_vals.length*100):100;
   var recId=Date.now();
   var payload={type:'morning',id:recId,partId:S.part,date:S.date,name:S.name,part:part.name,score:score,submittedAt:new Date().toLocaleString('ko-KR'),items:rows};
+  // 내 기록에 즉시 추가 (기록 화면에서 바로 확인 가능)
+  SS.records.unshift({type:'morning',id:recId,part:S.part,partName:part.name,date:S.date,name:S.name,score:score,submittedAt:payload.submittedAt,items:rows});
+  saveRecCache();
   showSubBox('loading','⏳','전송 중...','구글시트에 기록하고 있습니다');
   $('submitBtn').disabled=true;
   // 즉시 홈으로 이동
@@ -666,6 +669,7 @@ function submitAm() {
   // 백그라운드 전송
   postSheet(payload, function(){
     loadState().then(function(){saveCache();if(S.mode==='home')render();});
+    loadRecords().then(function(){saveRecCache();if(S.mode==='records')drawRecs();});
   }, function(){ console.log('submit failed, will retry'); });
 }
 
@@ -688,6 +692,11 @@ function submitEve() {
   var photoPayload={type:'evening',id:recId,deptId:S.eveDept,date:S.date,name:S.name,
     dept:dept.name,photoCount:photos.length,photos:photos.slice(),note:note,
     submittedAt:new Date().toLocaleString('ko-KR')};
+
+  // 내 기록에 즉시 추가 (기록 화면에서 바로 확인 가능)
+  SS.records.unshift({type:'evening',id:recId,dept:S.eveDept,deptName:dept.name,date:S.date,name:S.name,
+    photoCount:photos.length,photoUrls:photos.slice(),note:note,submittedAt:photoPayload.submittedAt});
+  saveRecCache();
 
   // 즉시 성공 화면 표시 (사진 업로드는 백그라운드)
   setMain('<div style="text-align:center;padding:60px 20px">'
