@@ -990,28 +990,50 @@ loadCached();          // 캐시 즉시 로드
 S.mode = 'home';
 render();              // 캐시 기준으로 바로 화면 표시
 
-// 백그라운드에서 서버 갱신 (첫 진입 1회)
+// 백그라운드에서 서버 갱신 (첫 진입 1회) - 상태 + 기록 동시 로드
 loadState().then(function(){
   saveCache();
   if (S.mode === 'home') render();
 });
+loadRecords().then(function(){
+  saveRecCache();
+  if (S.mode === 'records') drawRecs();
+});
 
-// 홈 화면에서 20초마다 자동 동기화 → 다른 기기 제출 자동 반영
+// 20초마다 자동 동기화 → 다른 기기 제출 자동 반영
+// 홈/기록 화면에서 모두 동작, 화면에 맞춰 갱신
 setInterval(function(){
-  if (S.mode === 'home' && document.visibilityState !== 'hidden') {
+  if (document.visibilityState === 'hidden') return;
+  if (S.mode === 'home') {
     loadState().then(function(){
       saveCache();
       if (S.mode === 'home') render();
     });
+    loadRecords().then(function(){
+      saveRecCache();
+    });
+  } else if (S.mode === 'records') {
+    loadRecords().then(function(){
+      saveRecCache();
+      if (S.mode === 'records') drawRecs();
+    });
+    loadState().then(function(){ saveCache(); });
   }
 }, 20000);
 
 // 앱이 백그라운드에서 다시 돌아왔을 때 즉시 동기화
 document.addEventListener('visibilitychange', function(){
-  if (document.visibilityState === 'visible' && S.mode === 'home') {
+  if (document.visibilityState !== 'visible') return;
+  if (S.mode === 'home') {
     loadState().then(function(){
       saveCache();
       if (S.mode === 'home') render();
+    });
+    loadRecords().then(function(){ saveRecCache(); });
+  } else if (S.mode === 'records') {
+    loadRecords().then(function(){
+      saveRecCache();
+      if (S.mode === 'records') drawRecs();
     });
   }
 });
