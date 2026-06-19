@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>킴스클럽 매장 점검</title>
+<title>킴스클럽 품질 분임조 활동</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#F2F1EE;color:#1A1A1A;min-height:100vh}
@@ -28,52 +28,52 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 .meta-inp{width:100%;height:40px;background:#FFF;border:1px solid #D0CFC9;border-radius:8px;padding:0 12px;font-family:inherit;font-size:14px;color:#1A1A1A;outline:none;-webkit-appearance:none}
 .meta-inp:focus{border-color:#D0021B}
 .sec-label{font-size:12px;font-weight:700;color:#1A2535;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #1A2535;display:flex;align-items:center;gap:6px}
-.sec-tag{font-size:10px;font-weight:700;border-radius:4px;padding:2px 7px;color:#FFF;background:#1A2535}
+.sec-tag{font-size:10px;font-weight:700;border-radius:4px;padding:2px 7px;color:#FFF;background:#D0021B}
 .sec-tag.pm{background:#2E4A7A}
-.part-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
-.part-card{background:#FFF;border:1.5px solid #E0DFD9;border-radius:12px;padding:14px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:border-color .15s}
-.part-card:hover{border-color:#aaa}
-.part-card.sel{border-color:#D0021B;background:#FFF5F5}
-.part-card.full{grid-column:1/-1}
-.part-card.sub{border-color:#27AE60;background:#F4FCF7}
-.part-icon{font-size:24px;flex-shrink:0}
-.part-name{font-size:14px;font-weight:700;color:#1A1A1A}
-.part-sub-txt{font-size:11px;color:#777;margin-top:2px}
-.part-cnt{margin-left:auto;background:#F0EFE9;font-size:11px;color:#555;border-radius:20px;padding:2px 8px;white-space:nowrap;flex-shrink:0}
-.part-card.sel .part-cnt{background:#D0021B;color:#FFF}
 .sbadge{display:inline-block;font-size:10px;font-weight:700;border-radius:20px;padding:2px 8px;margin-top:5px}
 .sbadge.done{background:#EAF8F0;color:#1E8449}
 .sbadge.undone{background:#FEF5E4;color:#B7770D}
-.eve-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
-.eve-card{background:#FFF;border:1.5px solid #E0DFD9;border-radius:12px;padding:18px 14px;cursor:pointer;text-align:center;position:relative;transition:border-color .15s}
+/* 품질 분임조 시간대 그룹 */
+.qt-group{margin-bottom:12px}
+.qt-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:5px;border-bottom:2px solid #1A2535}
+.qt-icon{font-size:18px}
+.qt-name{font-size:15px;font-weight:900;color:#1A2535}
+.qt-cnt{margin-left:auto;font-size:11px;color:#888}
+.eve-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+/* 시간대별 부서 4칸 한 줄 */
+.qt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.qt-grid .eve-card{padding:20px 3px 9px}
+.qt-grid .eve-name{font-size:13px}
+.qt-badge{position:absolute;top:4px;right:4px;font-size:8px;font-weight:700;padding:1px 5px;border-radius:20px;line-height:1.4}
+.qt-badge.done{background:#E8F8EE;color:#1E8449}
+.qt-badge.undone{background:#FEF5E4;color:#B7770D}
+.eve-card{background:#FFF;border:1.5px solid #E0DFD9;border-radius:10px;padding:9px 10px;cursor:pointer;text-align:center;position:relative;transition:border-color .15s}
 .eve-card:hover{border-color:#aaa}
 .eve-card.sel{border-color:#2E4A7A;background:#F0F4FC}
 .eve-card.sub{border-color:#2E4A7A;background:#E8EEF9}
-.eve-icon{font-size:38px;display:block;margin-bottom:8px}
-.eve-name{font-size:14px;font-weight:700;color:#1A1A1A;margin-bottom:4px}
-.eve-cnt{font-size:11px;color:#888}
-.eve-badge{position:absolute;top:8px;right:8px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.eve-card.q.sub{border-color:#D0021B;background:#FFF5F5}
+.eve-icon{font-size:22px;display:block;margin-bottom:2px;line-height:1}
+.eve-name{font-size:13px;font-weight:700;color:#1A1A1A;margin-bottom:1px}
+.eve-cnt{font-size:10px;color:#888;line-height:1.2}
+.eve-badge{position:absolute;top:5px;right:5px;font-size:9px;font-weight:700;padding:1px 5px;border-radius:20px}
 .eve-badge.done{background:#E8EEF9;color:#2E4A7A}
+.eve-badge.qdone{background:#FDECEA;color:#C0392B}
 .eve-badge.undone{background:#FEF5E4;color:#B7770D}
-.cat-sec{margin-bottom:20px}
-.cat-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #1A2535}
-.cat-name{font-size:15px;font-weight:900;color:#1A2535}
-.cat-cnt{font-size:11px;color:#888;margin-left:auto}
-.ci{background:#FFF;border:1px solid #E8E7E2;border-radius:10px;padding:12px 14px;margin-bottom:8px;border-left:3px solid #E8E7E2;transition:border-left-color .2s}
-.ci.good{border-left-color:#27AE60}
-.ci.warn{border-left-color:#F39C12}
-.ci.bad{border-left-color:#E74C3C}
-.ci-top{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px}
-.ci-num{font-size:11px;font-weight:700;color:#AAA;min-width:18px;padding-top:2px;flex-shrink:0}
-.ci-text{font-size:14px;font-weight:500;color:#1A1A1A;flex:1;line-height:1.5}
-.btn-grp{display:flex;gap:6px}
-.bst{flex:1;padding:9px 0;border-radius:7px;border:1.5px solid #E0DFD9;background:#F8F7F4;font-family:inherit;font-size:13px;font-weight:700;color:#666;cursor:pointer}
-.bst.sg{background:#EAF8F0;border-color:#27AE60;color:#1E8449}
-.bst.sw{background:#FEF5E4;border-color:#F39C12;color:#B7770D}
-.bst.sb{background:#FDECEA;border-color:#E74C3C;color:#C0392B}
-.memo-btn{max-width:42px;font-size:16px}
-.memo-ta{display:none;margin-top:8px;width:100%;background:#F8F7F4;border:1px solid #E0DFD9;border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;color:#1A1A1A;resize:none;outline:none;line-height:1.5}
-.memo-ta.show{display:block}
+/* 분임조 작성 화면 */
+.q-tmpl{background:#FFF5F5;border:1px solid #F3C7C7;border-radius:10px;padding:12px 14px;font-size:13px;color:#7A1F1F;line-height:1.7;margin-bottom:18px}
+.q-tmpl b{color:#D0021B}
+.q-field-lbl{font-size:11px;font-weight:700;color:#444;margin:14px 0 5px}
+.q-prow{display:flex;gap:6px;align-items:center;margin-bottom:8px}
+.q-prow .rank{font-size:12px;font-weight:800;color:#D0021B;width:22px;flex-shrink:0;text-align:center}
+.q-pkind{flex:0 0 74px;width:74px;min-width:0;padding:0 6px;-webkit-appearance:menulist;appearance:menulist;font-weight:700;color:#C0392B}
+.q-pname{flex:1.6;min-width:0;padding:0 8px}
+.q-pamt{flex:1.1;min-width:0;padding:0 8px}
+.q-prev{background:#1A2535;color:#EDEFF5;border-radius:10px;padding:14px 16px;font-size:13.5px;line-height:1.85;margin-bottom:8px}
+.qc-confirm{margin-top:22px;background:#EAF8F0;border:1px solid #27AE60;border-radius:12px;padding:20px 16px;text-align:center;font-size:14px;line-height:1.7;color:#1E8449}
+.qc-confirm b{font-size:16px}
+.q-note-ta{width:100%;background:#F8F7F4;border:1px solid #E0DFD9;border-radius:8px;padding:8px 10px;font-family:inherit;font-size:13px;color:#1A1A1A;resize:none;outline:none;line-height:1.5}
+.q-note-ta:focus{border-color:#D0021B}
+/* 저녁장 사진 */
 .eve-up-hdr{background:#1A2535;border-radius:12px 12px 0 0;padding:14px 16px;display:flex;align-items:center;gap:10px}
 .eve-up-icon{font-size:28px}
 .eve-up-name{font-size:15px;font-weight:700;color:#FFF}
@@ -97,38 +97,6 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 .btn-sub{padding:14px 18px;background:transparent;color:#CCC;border:1px solid rgba(255,255,255,.2);border-radius:10px;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
 .rpt-card{background:#FFF;border:1px solid #E8E7E2;border-radius:12px;padding:18px;margin-bottom:12px}
 .rpt-title{font-size:14px;font-weight:700;color:#1A1A1A;margin-bottom:12px}
-.ov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px}
-.ov-cell{background:#F8F7F4;border-radius:8px;padding:12px 8px;text-align:center}
-.ov-val{font-size:28px;font-weight:900}
-.ov-val.g{color:#1E8449}.ov-val.w{color:#B7770D}.ov-val.b{color:#C0392B}
-.ov-lbl{font-size:11px;color:#888;margin-top:3px}
-.score-wrap{text-align:center;padding:8px 0 14px}
-.score-num{font-size:52px;font-weight:900;line-height:1}
-.score-grade{font-size:13px;color:#555;margin-top:4px}
-.cs-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.cs-name{font-size:13px;font-weight:700;color:#1A1A1A;width:60px;flex-shrink:0}
-.cs-bar-bg{flex:1;height:8px;background:#F0EFE9;border-radius:4px;overflow:hidden}
-.cs-bar{height:100%;border-radius:4px}
-.cs-val{font-size:12px;font-weight:700;color:#1A1A1A;width:35px;text-align:right}
-.issue-li{padding:10px 12px;background:#FEF0EF;border-left:3px solid #E74C3C;border-radius:0 8px 8px 0;margin-bottom:6px;display:flex;align-items:flex-start;gap:8px}
-.issue-tag{font-size:10px;font-weight:700;background:#E74C3C;color:#FFF;padding:2px 6px;border-radius:4px;white-space:nowrap;flex-shrink:0}
-.issue-txt{font-size:13px;color:#1A1A1A;flex:1}
-.issue-memo{font-size:11px;color:#777;margin-top:3px}
-.all-good{text-align:center;padding:20px}
-.all-good-icon{font-size:40px;margin-bottom:8px}
-.all-good-text{font-size:16px;font-weight:700;color:#1E8449;margin-bottom:4px}
-.all-good-sub{font-size:13px;color:#888}
-.sub-box{border-radius:12px;padding:16px;text-align:center;margin-bottom:12px;display:none}
-.sub-box.loading{display:block;background:#F0EFE9;border:1px solid #ccc}
-.sub-box.ok{display:block;background:#EAF8F0;border:1px solid #27AE60}
-.sub-box.err{display:block;background:#FDECEA;border:1px solid #E74C3C}
-.sub-icon{font-size:32px;margin-bottom:8px}
-.sub-msg{font-size:14px;font-weight:700;color:#1A1A1A;margin-bottom:4px}
-.sub-sub{font-size:12px;color:#888}
-.loading-screen{text-align:center;padding:80px 20px}
-.spinner{width:36px;height:36px;border:3px solid #E0DFD9;border-top-color:#D0021B;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading-txt{font-size:14px;color:#888}
 .rec-filter{display:flex;align-items:center;gap:8px;margin-bottom:16px;background:#FFF;border:1px solid #E8E7E2;border-radius:10px;padding:10px 14px;flex-wrap:wrap}
 .rec-filter-lbl{font-size:12px;color:#888;white-space:nowrap}
 .rec-filter-inp{height:36px;background:#FFF;border:1px solid #D0CFC9;border-radius:7px;padding:0 10px;font-family:inherit;font-size:13px;color:#1A1A1A;outline:none;-webkit-appearance:none;flex:1;min-width:120px}
@@ -138,30 +106,28 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 .rec-grp-hdr{font-size:12px;font-weight:700;color:#888;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #E8E7E2}
 .rec-item{background:#FFF;border:1px solid #E8E7E2;border-radius:10px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
 .rec-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;cursor:pointer}
-.rec-icon.am{background:#F0EFE9}
+.rec-icon.am{background:#FDECEA}
 .rec-icon.pm{background:#E8EEF9}
 .rec-body{flex:1;min-width:0;cursor:pointer}
 .rec-body-title{font-size:14px;font-weight:700;color:#1A1A1A;margin-bottom:3px}
 .rec-body-sub{font-size:12px;color:#888}
-.rec-score{font-size:16px;font-weight:900;flex-shrink:0;cursor:pointer}
-.rec-score.g{color:#1E8449}.rec-score.w{color:#B7770D}.rec-score.b{color:#C0392B}
+.rec-loss{font-size:14px;font-weight:900;color:#C0392B;flex-shrink:0;cursor:pointer;white-space:nowrap}
+.rec-done{font-size:13px;font-weight:800;color:#1E8449;flex-shrink:0;cursor:pointer;white-space:nowrap}
 .rec-del{width:32px;height:32px;background:#FDECEA;border:none;border-radius:8px;color:#C0392B;font-size:15px;cursor:pointer;flex-shrink:0}
 .det-hdr{background:#FFF;border:1px solid #E8E7E2;border-radius:12px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
 .det-hdr-icon{font-size:32px}
 .det-hdr-info{flex:1}
 .det-hdr-title{font-size:16px;font-weight:700;color:#1A1A1A;margin-bottom:2px}
 .det-hdr-sub{font-size:12px;color:#888}
-.det-score{font-size:28px;font-weight:900}
+.det-loss{font-size:20px;font-weight:900;color:#C0392B;white-space:nowrap}
+.det-done{font-size:15px;font-weight:900;color:#1E8449;white-space:nowrap}
+.kind-tag{display:inline-block;font-size:10px;font-weight:800;color:#FFF;background:#C0392B;border-radius:4px;padding:2px 6px;margin-right:2px;vertical-align:middle}
 .det-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid #F0F0F0}
 .det-row:last-child{border-bottom:none}
-.det-num{font-size:11px;color:#aaa;min-width:20px;flex-shrink:0;font-weight:700;padding-top:2px}
+.det-num{font-size:11px;color:#aaa;min-width:28px;flex-shrink:0;font-weight:700;padding-top:2px}
 .det-q{font-size:13px;color:#1A1A1A;flex:1;line-height:1.5}
-.det-ans{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;flex-shrink:0;white-space:nowrap}
-.ans-g{background:#EAF8F0;color:#1E8449}
-.ans-w{background:#FEF5E4;color:#B7770D}
-.ans-b{background:#FDECEA;color:#C0392B}
-.ans-n{background:#F0F0F0;color:#888}
-.det-memo{font-size:11px;color:#888;margin-top:3px;padding-left:30px}
+.det-ans{font-size:12px;font-weight:700;padding:3px 9px;border-radius:20px;flex-shrink:0;white-space:nowrap;background:#FDECEA;color:#C0392B}
+.det-text{font-size:14px;line-height:1.9;color:#1A1A1A}
 .photo-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
 .photo-gitem{aspect-ratio:1;border-radius:8px;overflow:hidden;cursor:pointer;background:#F2F1EE;display:flex;align-items:center;justify-content:center}
 .photo-gitem img{width:100%;height:100%;object-fit:cover;display:block}
@@ -171,31 +137,6 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 .lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#FFF;font-size:22px;cursor:pointer}
 .lb-prev{left:12px}.lb-next{right:12px}
 .lb-cnt{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.7);font-size:13px}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto}
-.adm-panel{background:#FFF;width:100%;max-width:720px;min-height:100vh;padding-bottom:80px}
-.adm-hdr{background:#1A2535;padding:16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
-.adm-title{font-size:16px;font-weight:700;color:#FFF;flex:1}
-.adm-close{background:transparent;border:1px solid rgba(255,255,255,.3);border-radius:6px;color:#CCC;font-size:13px;padding:6px 14px;cursor:pointer;font-family:inherit}
-.adm-body{padding:16px}
-.adm-sec-title{font-size:13px;font-weight:700;color:#1A2535;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #1A2535}
-.adm-cat{background:#F8F7F4;border-radius:10px;padding:12px;margin-bottom:10px}
-.adm-cat-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.adm-cat-name{font-size:14px;font-weight:700;color:#1A1A1A}
-.adm-item-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
-.adm-inp{flex:1;height:38px;background:#FFF;border:1px solid #D0CFC9;border-radius:7px;padding:0 10px;font-family:inherit;font-size:13px;color:#1A1A1A;outline:none}
-.adm-inp:focus{border-color:#D0021B}
-.btn-del{width:34px;height:34px;background:#FDECEA;border:none;border-radius:7px;color:#C0392B;font-size:16px;cursor:pointer;flex-shrink:0}
-.btn-add{width:100%;height:36px;background:#FFF;border:1.5px dashed #ccc;border-radius:7px;color:#888;font-family:inherit;font-size:13px;cursor:pointer;margin-top:4px}
-.adm-save-bar{position:fixed;bottom:0;left:0;right:0;background:#1A2535;padding:12px 16px;z-index:310}
-.btn-adm-save{width:100%;max-width:720px;margin:0 auto;display:block;height:48px;background:#D0021B;color:#FFF;border:none;border-radius:10px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
-.pwd-screen{display:flex;flex-direction:column;align-items:center;padding:60px 24px;gap:16px}
-.pwd-title{font-size:18px;font-weight:700;color:#1A1A1A}
-.pwd-sub{font-size:13px;color:#888;text-align:center}
-.pwd-inp{width:100%;max-width:260px;height:44px;border:1.5px solid #D0CFC9;border-radius:10px;text-align:center;font-size:20px;letter-spacing:4px;outline:none;font-family:inherit;color:#1A1A1A}
-.pwd-inp:focus{border-color:#D0021B}
-.btn-pwd{width:100%;max-width:260px;height:44px;background:#D0021B;color:#FFF;border:none;border-radius:10px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
-.pwd-err{font-size:13px;color:#C0392B;display:none}
-.pwd-err.show{display:block}
 .jbj-mark{position:fixed;right:12px;bottom:76px;z-index:50;opacity:.45;pointer-events:none}.jbj-mark img{width:44px;height:auto;display:block;border-radius:4px}
 </style>
 </head>
@@ -203,9 +144,8 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 <header>
   <div class="logo" onclick="goHome()">KIM'S <span>CLUB</span></div>
   <div class="hdr-right">
-    <div class="hdr-info" id="hdrInfo"><strong>매장 점검</strong>야탑점</div>
+    <div class="hdr-info" id="hdrInfo"><strong>품질 분임조</strong>야탑점</div>
     <button class="hdr-btn" id="recBtn" onclick="goRecords()">기록</button>
-    <button class="hdr-btn" onclick="openAdmin()">설정</button>
   </div>
 </header>
 <div id="progWrap" style="display:none" class="prog-wrap">
@@ -213,12 +153,9 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
   <div class="prog-bg"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
 </div>
 <main id="mainArea"></main>
-<div class="jbj-mark"><img src="data:image/png;base64,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" alt="JBJ"></div>
+<div class="jbj-mark"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAAxCAYAAAARM212AAABCGlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8wQAELAYMDLl5JUVB7k4KEZFRCuwPGBiBEAwSk4sLGHADoKpv1yBqL+viUYcLcKakFicD6Q9ArFIEtBxopAiQLZIOYWuA2EkQtg2IXV5SUAJkB4DYRSFBzkB2CpCtkY7ETkJiJxcUgdT3ANk2uTmlyQh3M/Ck5oUGA2kOIJZhKGYIYnBncAL5H6IkfxEDg8VXBgbmCQixpJkMDNtbGRgkbiHEVBYwMPC3MDBsO48QQ4RJQWJRIliIBYiZ0tIYGD4tZ2DgjWRgEL7AwMAVDQsIHG5TALvNnSEfCNMZchhSgSKeDHkMyQx6QJYRgwGDIYMZAKbWPz9HbOBQAAAIqklEQVR42u1cbUhTXxj/3Tt1bikKNsvUXjaNMqVFpZEmaOWH/FCfIgiEEmyQRKAxirIXiIyKUdCL+EmCAj8U9EHQSRE0KoyGFYnFFimmlpVuQ5trO/8Pdfe/u7sv29zmFveBse3cl3PO85zznN/zcg4FgIBFNE2DEAJCAoplSnCiKAoURcHn8wWWswVMUZRfsDqdDoWFhUhNTZW5l8Dk8XgwOjoKm80WJEOGCPtTVVVFenp6iMPhIDIlBzkcDtLT00OqqqoIV56gKIpQFEUAkIaGBuJyuWSOJSk5nU7S0NBAABBGrhRN08Tn86Gqqgq9vb1Qq9Wy3ktimp2dRV1dHSwWC2iaBk0IAU3TOH36tCzcf4DUajXOnDnjB8sUAKLVajE4OIiMjIyYN2BoaAjj4+MBYID5vWTJEmzevBkpKSlBz7ndbgwMDMDtdvsRY6jo0g82WPWJ3a9UKpGZmYnc3FwsXbo05LpiQdPT07BarX+ExdOOkpISLFu2LKDM5XJh48aNsNvtf/pdXV0dt3Wivr4+GAj8/RQWFpLv37/zPvfgwQPB52LxUavVJC8vj9TU1JCrV6+SkZGRRVlXHz16JNrOO3fu8D5XXV1NABAaABQKRdxGJNdO484eoetfvnyJus0otZaNj4/jyZMnaG1tRUVFBa5duwav1xvXGRxpfYxM6cUwyOP5HB9F4sgZHx9Ha2srjh49ivn5+YTnl99xJcOS8KijowO3b99OmvbGXcCRukClnuNTu3z/2WXMf3a5mPpmytvb2zE2NpbQ/ErYGRyuSmLu51O7fP/ZZcx/djnzW0zgExMTODjx49LM4JRkdq6zf+v1ehQXFwvO4lBMJK/Xi4mJCVitVrhcLsF6CSEwm81obm6WBRwtlcQu5wqJEIKmpiYYDIaotOHVq1c4fPgw3r59638/t06bzYa5uTmoVCp5DV6IuSKFhBnBR9N82bJlC27cuIHU1FS/cLkDz+FwYHZ2VgZZ4ZorUgBHsCN0dLtSUVGBoqIiQa3idrvh8XhkMylZSaVSITc3V9SREO1B9c/N4EjNgnhkm3g8Hr8K5vNnZ2VlxSU480+ZSYmUJjQyMoIPHz4EgSzmu6CgIC7BmX8KRS9kveGLQEVKv379wrlz5zAzMyPYppqamqTgWdLawVwaHh6GxWIRDWZIMcrr9cJut6OrqwtPnz4V1DI5OTk4cOCA7OiIpfpmOzAoioLJZILJZApSqUJxVG4smvmW8oYBgNFohFarlQUczTWYz7nBFpCYYMTey3ZRSgIWmsaxY8dw/PjxRVfLoeKVhABZXAATjvD5Zig3eBCtNra1tcFkMsU1lZiv32JePdkOXgCA6erqQmdnZ1JtCqCTldli5dzo0EK1CqMSP336hKamJly5ciVpTMukBVnc8vz8fGg0GkFQJQa42M6NqakpTE5OBvmg2aCtra0Ud13diwbBwYG3LJyx2dnYsdy+JZyZ7s+T2YctXqDPQuWv47ee5wjI1KhAAAAAElFTkSuQmCC" alt="JBJ"></div>
 <div class="btm" id="btm" style="display:none">
   <div class="btm-in" id="btmIn"></div>
-</div>
-<div class="overlay" id="adminOverlay" style="display:none">
-  <div class="adm-panel" id="adminPanel"></div>
 </div>
 <div class="lb" id="lb" style="display:none">
   <button class="lb-close" onclick="closeLb()">X</button>
@@ -232,30 +169,29 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 var URL_SHEET = 'https://script.google.com/macros/s/AKfycbyg3IqTj15u4O-9mo-BRCiZELg4cpBbBZXErJ8KSSmqSSTLZmPlkm2ojjj6xwKC5IRU/exec';
 var MIN_P = 3, MAX_P = 5;
 
-var DEF_CATS = {
-  farm:    { name:'농산', icon:'🥬', items:['채소 진열상태, 상품과 POP 일치','청과 진열상태, 상품과 POP 일치','양곡 진열상태, 상품과 POP 일치','바닥 청소 상태'] },
-  sea:     { name:'수산', icon:'🐟', items:['쇼케이스 진열상태, 상품과 POP 일치','견과류 진열상태, 상품과 POP 일치','냉장&냉동 평대 진열상태, 상품과 POP 일치','POP, 연출물 외 겹치지 않는지'] },
-  meat:    { name:'축산', icon:'🥩', items:['한우 진열상태, 상품과 POP 일치','수입육 진열상태, 상품과 POP 일치','돈육 진열상태, 상품과 POP 일치','오전 마크다운 상품이 본매대에 있진 않은지','수수료업체 집기, 도구 등 정리상태'] },
-  grocery: { name:'공산', icon:'🛒', items:['냉장&냉동 진열상태와 상품과 POP 일치','음료, 주류 진열상태와 상품과 POP 일치','비식품 진열상태와 상품과 POP 일치','상온 진열상태와 상품과 POP 일치','할인매대 진열 정리'] }
-};
-var AM_PARTS = [
-  {id:'farm',   name:'농산',    icon:'🥬', cats:['farm']},
-  {id:'sea',    name:'수산',    icon:'🐟', cats:['sea']},
-  {id:'meat',   name:'축산',    icon:'🥩', cats:['meat']},
-  {id:'grocery',name:'공산',    icon:'🛒', cats:['grocery']},
-  {id:'all',    name:'전체 점검',icon:'⭐', cats:['farm','sea','meat','grocery']}
+// 품질 분임조 - 시간대  (mode: 'check'=이름+완료체크 / 'full'=손실 상세 작성)
+var TIME_SLOTS = [
+  {id:'am9', name:'오전 9시', icon:'🌅', mode:'check'},
+  {id:'pm2', name:'오후 2시', icon:'☀️', mode:'full'},
+  {id:'pm8', name:'오후 8시', icon:'🌇', mode:'check'}
 ];
-var EVE_DEPTS = [
+// 손실 상품 구분 옵션
+var LOSS_KINDS = ['할인','폐기','재고로스'];
+// 부서 (분임조 / 저녁장 공통)
+var DEPTS = [
   {id:'farm',   name:'농산', icon:'🥬'},
   {id:'sea',    name:'수산', icon:'🐟'},
   {id:'meat',   name:'축산', icon:'🥩'},
   {id:'grocery',name:'공산', icon:'🛒'}
 ];
+var EVE_DEPTS = DEPTS;
 
 // 서버 공유 상태
 var SS = { submissions:{}, records:[] };
-function clone(o){ return JSON.parse(JSON.stringify(o)); }
-var CATS = clone(DEF_CATS);
+
+// 삭제 기록 (서버 동기화 시 부활 방지)
+var DELETED = (function(){ try{ return JSON.parse(localStorage.getItem('kims_deleted')||'{}'); }catch(e){ return {}; } })();
+function saveDeleted(){ try{ localStorage.setItem('kims_deleted', JSON.stringify(DELETED)); }catch(e){} }
 
 function apiGET(action) {
   return fetch(URL_SHEET + '?action=' + action, {method:'GET'})
@@ -266,7 +202,6 @@ function loadState() {
   return apiGET('getState').then(function(d) {
     if (d && d.status === 'ok') {
       SS.submissions = d.submissions || {};
-      if (d.cats) CATS = d.cats;
     }
   }).catch(function(e){ console.log('loadState fail', e); });
 }
@@ -274,17 +209,20 @@ function loadState() {
 function loadRecords() {
   return apiGET('getRecords').then(function(d) {
     if (d && d.status === 'ok') {
-      SS.records = (d.records || []).map(function(r) {
-        r.date = normDate(r.date);
-        return r;
-      }).sort(function(a,b){
-        // 최신 제출이 위로 오도록 정렬
-        var ad=(a.date||'')+' '+(a.submittedAt||'');
-        var bd=(b.date||'')+' '+(b.submittedAt||'');
-        return bd.localeCompare(ad);
-      });
+      var serverRecs = (d.records || []).map(function(r){ r.date = normDate(r.date); return r; });
+      var serverIds = {};
+      serverRecs.forEach(function(r){ serverIds[r.id] = true; });
+      // 서버에 아직 없는 로컬 기록(예: 백엔드 미지원 분임조)도 유지
+      var localOnly = SS.records.filter(function(r){ return !serverIds[r.id]; });
+      SS.records = serverRecs.concat(localOnly)
+        .filter(function(r){ return !DELETED[r.id]; })
+        .sort(function(a,b){
+          var ad=(a.date||'')+' '+(a.submittedAt||'');
+          var bd=(b.date||'')+' '+(b.submittedAt||'');
+          return bd.localeCompare(ad);
+        });
     }
-  }).catch(function(e){ console.log('loadRecords fail', e); SS.records = []; });
+  }).catch(function(e){ console.log('loadRecords fail', e); });
 }
 
 function fmtLocal(d){
@@ -299,12 +237,6 @@ function normDate(raw) {
   try { var d = new Date(s); if (!isNaN(d.getTime())) return fmtLocal(d); } catch(e) {}
   return s;
 }
-function addDays(ds, n) {
-  var p = ds.split('-');
-  var d = new Date(+p[0], +p[1]-1, +p[2]);
-  d.setDate(d.getDate()+n);
-  return fmtLocal(d);
-}
 function isSub(type, pid, date) {
   return !!(SS.submissions[date] && SS.submissions[date][type] && SS.submissions[date][type][pid]);
 }
@@ -316,12 +248,13 @@ function markSub(type, pid, date) {
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-// 로컬(한국) 기준 YYYY-MM-DD — toISOString()은 UTC라 한국 오전엔 전날이 나옴
+function cleanNum(v){ return String(v==null?'':v).replace(/[^0-9]/g,''); }
+function fmtWon(v){ var n=cleanNum(v); return n ? Number(n).toLocaleString('ko-KR')+'원' : '-'; }
+// 로컬(한국) 기준 YYYY-MM-DD
 function todayLocal(){
   var d = new Date();
   return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
 }
-function loadPwd() { return localStorage.getItem('kims_pwd') || '1234'; }
 function compressImg(dataUrl, maxW, maxH, q, cb) {
   var img = new Image();
   img.onload = function() {
@@ -341,227 +274,273 @@ var S = {
   mode: 'home',
   date: todayLocal(),
   name: '',
-  part: null, ans: {}, memo: {},
+  // 품질 분임조
+  qTime: null, qDept: null,
+  qData: {total:'', p1k:'할인', p1n:'', p1a:'', p2k:'할인', p2n:'', p2a:'', p3k:'할인', p3n:'', p3a:'', note:''},
+  // 저녁장
   eveDept: null,
   evePhotos: {farm:[], sea:[], meat:[], grocery:[]},
   eveNotes:  {farm:'', sea:'', meat:'', grocery:''},
   detailRec: null,
   recDate: todayLocal()
 };
-var adminAuthed = false, editCats = {};
 var lbPhotos = [], lbIdx = 0;
 
-function getCats() {
-  if (!S.part) return [];
-  var p = AM_PARTS.filter(function(p){ return p.id === S.part; });
-  return p.length ? p[0].cats : [];
+function $(id) { return document.getElementById(id); }
+function setMain(html) { $('mainArea').innerHTML = html; }
+function setBtm(html) { $('btmIn').innerHTML = html; }
+
+// 분임조 활동 문장 자동 작성
+function composeQ(deptName, d) {
+  function won(v){ var n=cleanNum(v); return n ? Number(n).toLocaleString('ko-KR')+'원' : '[??? 원]'; }
+  function nm(v){ return (v && v.trim()) ? v.trim() : '[????]'; }
+  function kd(v){ return v ? '('+v+') ' : ''; }
+  return '전일 우리 ' + deptName + '팀에서 버려진 손실난 금액은 ' + won(d.total) + ' 입니다. '
+    + '손실발생 큰상품 ' + kd(d.p1k) + nm(d.p1n) + ', ' + won(d.p1a) + ' / '
+    + '두번째 큰상품 ' + kd(d.p2k) + nm(d.p2n) + ', ' + won(d.p2a) + ' / '
+    + '세번째 큰상품 ' + kd(d.p3k) + nm(d.p3n) + ', ' + won(d.p3a) + ' 입니다.';
 }
-function totalItems() {
-  return getCats().reduce(function(s,c){ return s + CATS[c].items.length; }, 0);
-}
-function answeredCnt() {
-  var cnt = 0;
-  for (var k in S.ans) { if (S.ans[k]) cnt++; }
-  return cnt;
-}
-function updateProg() {
-  var t = totalItems(), a = answeredCnt(), pct = t > 0 ? Math.round(a/t*100) : 0;
-  document.getElementById('progLbl').textContent = a+'/'+t+' 항목';
-  document.getElementById('progPct').textContent = pct+'%';
-  document.getElementById('progFill').style.width = pct+'%';
-}
+
 function goHome() {
   S.mode = 'home';
-  // 캐시로 즉시 렌더 (로딩 화면 X)
   render();
-  // 항상 백그라운드에서 서버 갱신 → 다른 기기 제출 즉시 반영
   loadState().then(function(){
     saveCache();
     if (S.mode === 'home') render();
   });
 }
 function saveCache() {
-  try { localStorage.setItem('kims_state_cache', JSON.stringify({submissions:SS.submissions, cats:CATS})); } catch(e) {}
+  try { localStorage.setItem('kims_state_cache', JSON.stringify({submissions:SS.submissions})); } catch(e) {}
 }
 function goRecords() { S.mode = 'records'; S.recDate = S.date; render(); }
-function $(id) { return document.getElementById(id); }
-function setMain(html) { $('mainArea').innerHTML = html; }
-function setBtm(html) { $('btmIn').innerHTML = html; }
 
 function render() {
-  $('progWrap').style.display = S.mode === 'am-check' ? 'block' : 'none';
+  $('progWrap').style.display = 'none';
   $('btm').style.display = S.mode === 'loading' ? 'none' : 'block';
   $('recBtn').className = 'hdr-btn' + (S.mode==='records'||S.mode==='rec-detail' ? ' active' : '');
   if      (S.mode === 'loading')    showLoading();
   else if (S.mode === 'home')       showHome();
-  else if (S.mode === 'am-check')   showCheck();
-  else if (S.mode === 'am-report')  showReport();
+  else if (S.mode === 'quality')    showQuality();
+  else if (S.mode === 'qcheck')     showQualityCheck();
   else if (S.mode === 'evening')    showEvening();
   else if (S.mode === 'records')    showRecords();
   else if (S.mode === 'rec-detail') showRecDetail();
 }
 
 function showLoading() {
-  $('hdrInfo').innerHTML = '<strong>매장 점검</strong>야탑점';
-  setMain('<div class="loading-screen"><div class="spinner"></div><div class="loading-txt">데이터 불러오는 중...</div></div>');
+  $('hdrInfo').innerHTML = '<strong>품질 분임조</strong>야탑점';
+  setMain('<div style="text-align:center;padding:80px 20px"><div class="loading-txt" style="font-size:14px;color:#888">데이터 불러오는 중...</div></div>');
 }
 
 // HOME
 function showHome() {
-  $('hdrInfo').innerHTML = '<strong>매장 점검</strong>야탑점';
-  var amHtml = '';
-  for (var i = 0; i < AM_PARTS.length; i++) {
-    var p = AM_PARTS[i];
-    var cnt = 0;
-    for (var j = 0; j < p.cats.length; j++) cnt += CATS[p.cats[j]].items.length;
-    var sub = isSub('morning', p.id, S.date);
-    var badge = sub ? '<span class="sbadge done">✓ 제출 완료</span>' : '<span class="sbadge undone">● 미제출</span>';
-    var cls = 'part-card' + (S.part===p.id?' sel':'') + (p.id==='all'?' full':'') + (sub?' sub':'');
-    amHtml += '<div class="'+cls+'" onclick="selPart(\''+p.id+'\')">'
-      + '<div class="part-icon">'+p.icon+'</div>'
-      + '<div><div class="part-name">'+p.name+'</div><div class="part-sub-txt">'+cnt+'개 항목</div>'+badge+'</div>'
-      + '<div class="part-cnt">'+cnt+'항목</div></div>';
+  $('hdrInfo').innerHTML = '<strong>품질 분임조</strong>야탑점';
+  // 품질 분임조 - 시간대별 부서 카드
+  var qHtml = '';
+  for (var ti = 0; ti < TIME_SLOTS.length; ti++) {
+    var t = TIME_SLOTS[ti];
+    var doneCnt = 0;
+    var cards = '';
+    for (var di = 0; di < DEPTS.length; di++) {
+      var d = DEPTS[di];
+      var sub = isSub('quality', t.id+'_'+d.id, S.date);
+      if (sub) doneCnt++;
+      var badge = sub ? '<div class="qt-badge done">✓ 제출</div>' : '<div class="qt-badge undone">미제출</div>';
+      cards += '<div class="eve-card q'+(sub?' sub':'')+'" onclick="openQuality(\''+t.id+'\',\''+d.id+'\')">'
+        + badge
+        + '<span class="eve-icon">'+d.icon+'</span>'
+        + '<div class="eve-name">'+d.name+'</div></div>';
+    }
+    qHtml += '<div class="qt-group">'
+      + '<div class="qt-hdr"><span class="qt-icon">'+t.icon+'</span><span class="qt-name">'+t.name+'</span>'
+      + '<span class="qt-cnt">'+doneCnt+'/'+DEPTS.length+' 완료</span></div>'
+      + '<div class="qt-grid">'+cards+'</div></div>';
   }
+  // 저녁장
   var eveHtml = '';
   for (var i = 0; i < EVE_DEPTS.length; i++) {
-    var d = EVE_DEPTS[i];
-    var photos = S.evePhotos[d.id] || [];
-    var sub = isSub('evening', d.id, S.date);
-    var badge = sub ? '<div class="eve-badge done">✓ 제출완료</div>' : '<div class="eve-badge undone">● 미제출</div>';
-    var cls = 'eve-card' + (S.eveDept===d.id?' sel':'') + (sub?' sub':'');
-    eveHtml += '<div class="'+cls+'" onclick="selEve(\''+d.id+'\')">'
-      + badge
-      + '<span class="eve-icon">'+d.icon+'</span>'
-      + '<div class="eve-name">'+d.name+'</div>'
+    var ed = EVE_DEPTS[i];
+    var photos = S.evePhotos[ed.id] || [];
+    var esub = isSub('evening', ed.id, S.date);
+    var ebadge = esub ? '<div class="eve-badge done">✓ 제출완료</div>' : '<div class="eve-badge undone">● 미제출</div>';
+    var ecls = 'eve-card' + (S.eveDept===ed.id?' sel':'') + (esub?' sub':'');
+    eveHtml += '<div class="'+ecls+'" onclick="selEve(\''+ed.id+'\')">'
+      + ebadge
+      + '<span class="eve-icon">'+ed.icon+'</span>'
+      + '<div class="eve-name">'+ed.name+'</div>'
       + '<div class="eve-cnt">사진 '+photos.length+'장 / 최대 '+MAX_P+'장</div></div>';
   }
   setMain(
     '<div class="step-tag">KIMS CLUB · YATAP</div>'
-    +'<h1 class="step-title">매장 점검</h1>'
-    +'<p class="step-sub">점검 정보 입력 후 항목을 선택하세요</p>'
+    +'<h1 class="step-title">품질 분임조 활동</h1>'
+    +'<p class="step-sub">날짜·이름 입력 후 시간대·부서를 선택하세요</p>'
     +'<div class="meta-row">'
-    +'<div><label class="meta-lbl">점검일</label>'
+    +'<div><label class="meta-lbl">활동일</label>'
     +'<input class="meta-inp" type="date" id="dateInp" value="'+S.date+'" onchange="S.date=this.value;loadState().then(showHome)"></div>'
-    +'<div><label class="meta-lbl">점검자 이름</label>'
+    +'<div><label class="meta-lbl">작성자 이름</label>'
     +'<input class="meta-inp" type="text" id="nameInp" placeholder="이름 입력" value="'+esc(S.name)+'" oninput="S.name=this.value;chkReady()"></div>'
     +'</div>'
-    +'<div class="sec-label"><span class="sec-tag">오전</span>점검 체크리스트</div>'
-    +'<div class="part-grid">'+amHtml+'</div>'
+    +'<div class="sec-label"><span class="sec-tag">분임조</span>시간대별 품질 분임조 활동</div>'
+    + qHtml
     +'<div class="sec-label"><span class="sec-tag pm">저녁</span>저녁장 매대 진열 점검</div>'
     +'<div class="eve-grid">'+eveHtml+'</div>'
   );
-  var isEve = S.eveDept && !S.part;
-  setBtm('<button class="btn-main'+(isEve?' eve':'')+'" id="startBtn" onclick="startAction()" '+(S.name.trim()&&(S.part||S.eveDept)?'':'disabled')+'>'+(isEve?'📷 사진 촬영 시작 →':'점검 시작하기 →')+'</button>');
+  setBtm('<button class="btn-main'+(S.eveDept?' eve':'')+'" id="startBtn" onclick="startAction()" '+(S.name.trim()&&S.eveDept?'':'disabled')+'>'+(S.eveDept?'📷 사진 촬영 시작 →':'위에서 분임조 활동 또는 저녁장 부서를 선택하세요')+'</button>');
 }
 function chkReady() {
   var b = $('startBtn'); if (!b) return;
-  var isEve = S.eveDept && !S.part;
-  b.disabled = !(S.name.trim() && (S.part || S.eveDept));
-  b.className = 'btn-main' + (isEve?' eve':'');
-  b.textContent = isEve ? '📷 사진 촬영 시작 →' : '점검 시작하기 →';
+  b.disabled = !(S.name.trim() && S.eveDept);
+  b.className = 'btn-main' + (S.eveDept?' eve':'');
+  b.textContent = S.eveDept ? '📷 사진 촬영 시작 →' : '위에서 분임조 활동 또는 저녁장 부서를 선택하세요';
 }
-function selPart(id) { S.part = (S.part===id?null:id); S.eveDept=null; S.ans={}; S.memo={}; showHome(); }
-function selEve(id) { S.eveDept = (S.eveDept===id?null:id); S.part=null; showHome(); }
-function startAction() { if (!S.name.trim()) return; if (S.part) {S.mode='am-check';render();} else if (S.eveDept) {S.mode='evening';render();} }
+function selEve(id) { S.eveDept = (S.eveDept===id?null:id); showHome(); }
+function startAction() { if (S.name.trim() && S.eveDept) { S.mode='evening'; render(); } }
 
-// AM CHECK
-function showCheck() {
-  var p = AM_PARTS.filter(function(x){return x.id===S.part;})[0];
-  $('hdrInfo').innerHTML = '<strong>'+esc(S.name)+'</strong>'+p.name+' 오전 점검';
-  updateProg();
-  var html = '';
-  var cats = getCats();
-  for (var ci = 0; ci < cats.length; ci++) {
-    var catId = cats[ci];
-    var cat = CATS[catId];
-    html += '<div class="cat-sec"><div class="cat-hdr"><span style="font-size:18px">'+cat.icon+'</span>'
-      +'<span class="cat-name">'+cat.name+'</span><span class="cat-cnt">'+cat.items.length+'개</span></div>';
-    for (var ii = 0; ii < cat.items.length; ii++) {
-      var key = catId+'_'+ii;
-      var ans = S.ans[key] || '';
-      var memo = S.memo[key] || '';
-      html += '<div class="ci'+(ans?' '+ans:'')+'" id="ci_'+key+'">'
-        +'<div class="ci-top"><span class="ci-num">'+(ii+1)+'</span><span class="ci-text">'+esc(cat.items[ii])+'</span></div>'
-        +'<div class="btn-grp">'
-        +'<button class="bst'+(ans==='good'?' sg':'')+'" onclick="setAns(\''+key+'\',\'good\')">✅ 양호</button>'
-        +'<button class="bst'+(ans==='warn'?' sw':'')+'" onclick="setAns(\''+key+'\',\'warn\')">⚠️ 주의</button>'
-        +'<button class="bst'+(ans==='bad'?' sb':'')+'" onclick="setAns(\''+key+'\',\'bad\')">❌ 불량</button>'
-        +'<button class="bst memo-btn" onclick="togMemo(\''+key+'\')">✏️</button>'
-        +'</div>'
-        +'<textarea class="memo-ta'+(memo?' show':'')+'" id="memo_'+key+'" rows="2" placeholder="특이사항..." onchange="S.memo[\''+key+'\']=this.value">'+esc(memo)+'</textarea>'
-        +'</div>';
-    }
-    html += '</div>';
-  }
-  setMain(html);
-  setBtm('<button class="btn-sub" onclick="goHome()">← 뒤로</button>'
-    +'<button class="btn-main" onclick="S.mode=\'am-report\';render()">점검 완료 →</button>');
-}
-function setAns(key, val) {
-  S.ans[key] = (S.ans[key]===val) ? '' : val;
-  var el = $('ci_'+key); if (!el) return;
-  var a = S.ans[key];
-  el.className = 'ci' + (a?' '+a:'');
-  var btns = el.querySelectorAll('.bst:not(.memo-btn)');
-  var vals = ['good','warn','bad'], cls = ['sg','sw','sb'];
-  for (var i=0;i<btns.length;i++) btns[i].className = 'bst' + (a===vals[i]?' '+cls[i]:'');
-  updateProg();
-}
-function togMemo(key) {
-  var ta = $('memo_'+key); if (!ta) return;
-  ta.classList.toggle('show');
-  if (ta.classList.contains('show')) ta.focus();
+function openQuality(timeId, deptId) {
+  if (!S.name.trim()) { alert('작성자 이름을 먼저 입력해주세요.'); var i=$('nameInp'); if(i) i.focus(); return; }
+  var t = TIME_SLOTS.filter(function(x){return x.id===timeId;})[0];
+  S.qTime = timeId; S.qDept = deptId; S.eveDept = null;
+  S.qData = {total:'', p1k:'할인', p1n:'', p1a:'', p2k:'할인', p2n:'', p2a:'', p3k:'할인', p3n:'', p3a:'', note:''};
+  S.mode = (t && t.mode==='check') ? 'qcheck' : 'quality';
+  render();
 }
 
-// AM REPORT
-function showReport() {
-  var part = AM_PARTS.filter(function(x){return x.id===S.part;})[0];
-  $('hdrInfo').innerHTML = '<strong>점검 결과</strong>'+S.date;
-  var good=0,warn=0,bad=0,na=0;
-  var issues=[], warnItems=[], catScores={};
-  var cats = getCats();
-  for (var ci=0;ci<cats.length;ci++) {
-    var catId=cats[ci], cat=CATS[catId], cg=0, cna=0;
-    for (var ii=0;ii<cat.items.length;ii++) {
-      var a = S.ans[catId+'_'+ii];
-      if (a==='good'){good++;cg++;}
-      else if (a==='warn'){warn++;warnItems.push({cat:cat.name,q:cat.items[ii],memo:S.memo[catId+'_'+ii]||''});}
-      else if (a==='bad'){bad++;issues.push({cat:cat.name,q:cat.items[ii],memo:S.memo[catId+'_'+ii]||''});}
-      else{na++;cna++;}
+// 품질 분임조 작성 화면
+function showQuality() {
+  var t = TIME_SLOTS.filter(function(x){return x.id===S.qTime;})[0];
+  var dept = DEPTS.filter(function(x){return x.id===S.qDept;})[0];
+  $('hdrInfo').innerHTML = '<strong>'+esc(S.name)+'</strong>'+t.name+' '+dept.name+' 분임조';
+  var d = S.qData;
+  function kindSel(kk) {
+    var opts = '';
+    for (var i=0;i<LOSS_KINDS.length;i++) {
+      opts += '<option value="'+LOSS_KINDS[i]+'"'+(d[kk]===LOSS_KINDS[i]?' selected':'')+'>'+LOSS_KINDS[i]+'</option>';
     }
-    catScores[catId]={name:cat.name,icon:cat.icon,pct:Math.round(cg/(cat.items.length-cna||1)*100)};
+    return '<select class="meta-inp q-pkind" onchange="S.qData.'+kk+'=this.value;updateQPrev()">'+opts+'</select>';
   }
-  var eff=totalItems()-na, score=eff>0?Math.round(good/eff*100):100;
-  var grade=score>=90?'A등급 · 우수':score>=75?'B등급 · 양호':score>=60?'C등급 · 보통':'D등급 · 개선필요';
-  var sc=score>=90?'#1E8449':score>=75?'#2471A3':score>=60?'#B7770D':'#C0392B';
-  var issHtml='';
-  if (issues.length) {
-    issHtml+='<div class="rpt-card"><div class="rpt-title">불량 항목 ('+issues.length+'건)</div>';
-    for(var i=0;i<issues.length;i++) issHtml+='<div class="issue-li"><span class="issue-tag">'+esc(issues[i].cat)+'</span><div><div class="issue-txt">'+esc(issues[i].q)+'</div>'+(issues[i].memo?'<div class="issue-memo">↳ '+esc(issues[i].memo)+'</div>':'')+'</div></div>';
-    issHtml+='</div>';
+  function prow(rank, kk, nk, ak) {
+    return '<div class="q-prow"><span class="rank">'+rank+'위</span>'
+      + kindSel(kk)
+      +'<input class="meta-inp q-pname" placeholder="상품명" value="'+esc(d[nk])+'" oninput="S.qData.'+nk+'=this.value;updateQPrev()">'
+      +'<input class="meta-inp q-pamt" inputmode="numeric" placeholder="금액(원)" value="'+esc(d[ak])+'" oninput="S.qData.'+ak+'=this.value;updateQPrev()"></div>';
   }
-  if (warnItems.length) {
-    issHtml+='<div class="rpt-card"><div class="rpt-title">주의 항목 ('+warnItems.length+'건)</div>';
-    for(var i=0;i<warnItems.length;i++) issHtml+='<div class="issue-li" style="background:#FEF5E4;border-left-color:#F39C12"><span class="issue-tag" style="background:#F39C12">'+esc(warnItems[i].cat)+'</span><div><div class="issue-txt">'+esc(warnItems[i].q)+'</div>'+(warnItems[i].memo?'<div class="issue-memo">↳ '+esc(warnItems[i].memo)+'</div>':'')+'</div></div>';
-    issHtml+='</div>';
-  }
-  if (!issues.length && !warn) issHtml='<div class="rpt-card"><div class="all-good"><div class="all-good-icon">🎉</div><div class="all-good-text">전 항목 양호</div><div class="all-good-sub">오늘 오전 점검 수고하셨습니다!</div></div></div>';
-  var csHtml='';
-  for(var ci=0;ci<cats.length;ci++){var cs=catScores[cats[ci]],fc=cs.pct>=90?'#27AE60':cs.pct>=70?'#F39C12':'#E74C3C';csHtml+='<div class="cs-row"><div class="cs-name">'+cs.icon+' '+cs.name+'</div><div class="cs-bar-bg"><div class="cs-bar" style="width:'+cs.pct+'%;background:'+fc+'"></div></div><div class="cs-val">'+cs.pct+'점</div></div>';}
   setMain(
-    '<div class="step-tag">오전 점검 결과</div>'
-    +'<h1 class="step-title" style="margin-bottom:2px">'+esc(S.name)+' · '+part.name+'</h1>'
+    '<div class="step-tag">품질 분임조 활동</div>'
+    +'<h1 class="step-title" style="margin-bottom:2px">'+dept.icon+' '+dept.name+' · '+t.name+'</h1>'
     +'<p class="step-sub">'+S.date+' · 야탑점 킴스클럽</p>'
-    +'<div class="sub-box" id="subBox"><div class="sub-icon" id="subIcon"></div><div class="sub-msg" id="subMsg"></div><div class="sub-sub" id="subSub"></div></div>'
-    +'<div class="rpt-card"><div class="score-wrap"><div class="score-num" style="color:'+sc+'">'+score+'점</div><div class="score-grade">'+grade+'</div></div>'
-    +'<div class="ov-grid"><div class="ov-cell"><div class="ov-val g">'+good+'</div><div class="ov-lbl">양호</div></div>'
-    +'<div class="ov-cell"><div class="ov-val w">'+warn+'</div><div class="ov-lbl">주의</div></div>'
-    +'<div class="ov-cell"><div class="ov-val b">'+bad+'</div><div class="ov-lbl">불량</div></div></div></div>'
-    +'<div class="rpt-card"><div class="rpt-title">파트별 점수</div>'+csHtml+'</div>'
-    +issHtml
+    +'<div class="q-tmpl">전일 우리 <b>'+dept.name+'팀</b>에서 버려지거나 할인 판매된 상품과 금액 작성</div>'
+    +'<label class="q-field-lbl">전일 손실 총액 (원)</label>'
+    +'<input class="meta-inp" inputmode="numeric" placeholder="예: 125000" value="'+esc(d.total)+'" oninput="S.qData.total=this.value;updateQPrev()">'
+    +'<div class="q-field-lbl">손실 큰 상품 TOP 3 <span style="font-weight:400;color:#888">(구분 · 상품명 · 금액)</span></div>'
+    + prow(1,'p1k','p1n','p1a')
+    + prow(2,'p2k','p2n','p2a')
+    + prow(3,'p3k','p3n','p3a')
+    +'<div class="q-field-lbl">특이사항 / 개선 활동 (선택)</div>'
+    +'<textarea class="q-note-ta" rows="2" placeholder="분임조 토의 내용, 개선 방안 등..." oninput="S.qData.note=this.value">'+esc(d.note)+'</textarea>'
+    +'<div class="sec-label" style="margin-top:20px">📝 미리보기</div>'
+    +'<div class="q-prev" id="qPrev">'+esc(composeQ(dept.name, d))+'</div>'
   );
-  setBtm('<button class="btn-sub" onclick="S.mode=\'am-check\';render()">← 수정</button>'
-    +'<button class="btn-main" id="submitBtn" onclick="submitAm()">📤 구글시트 제출</button>');
+  setBtm('<button class="btn-sub" onclick="goHome()">← 뒤로</button>'
+    +'<button class="btn-main" onclick="submitQuality()">📤 분임조 활동 제출</button>');
+}
+function updateQPrev() {
+  var dept = DEPTS.filter(function(x){return x.id===S.qDept;})[0];
+  var el = $('qPrev');
+  if (el && dept) el.textContent = composeQ(dept.name, S.qData);
+}
+
+// SUBMIT
+function postSheet(payload, onOk, onFail) {
+  var body = JSON.stringify(payload);
+  fetch(URL_SHEET, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:body})
+    .then(function(){ if(onOk) onOk(); })
+    .catch(function(){ if(onFail) onFail(); });
+}
+
+function submitQuality() {
+  var t = TIME_SLOTS.filter(function(x){return x.id===S.qTime;})[0];
+  var dept = DEPTS.filter(function(x){return x.id===S.qDept;})[0];
+  var d = S.qData;
+  if (!cleanNum(d.total)) { alert('전일 손실 총액을 입력해주세요.'); return; }
+  var products = [
+    {kind:d.p1k||'', name:(d.p1n||'').trim(), amount:cleanNum(d.p1a)},
+    {kind:d.p2k||'', name:(d.p2n||'').trim(), amount:cleanNum(d.p2a)},
+    {kind:d.p3k||'', name:(d.p3n||'').trim(), amount:cleanNum(d.p3a)}
+  ];
+  var text = composeQ(dept.name, d);
+  var recId = Date.now();
+  var submittedAt = new Date().toLocaleString('ko-KR');
+  var payload = {
+    type:'quality', id:recId, date:S.date, name:S.name,
+    timeId:S.qTime, time:t.name, deptId:S.qDept, dept:dept.name,
+    qmode:'full', total:cleanNum(d.total), products:products, note:d.note||'',
+    text:text, submittedAt:submittedAt
+  };
+  // 내 기록에 즉시 추가
+  SS.records.unshift({
+    type:'quality', id:recId, date:S.date, name:S.name,
+    timeId:S.qTime, timeName:t.name, deptId:S.qDept, deptName:dept.name,
+    qmode:'full', total:cleanNum(d.total), products:products, note:d.note||'',
+    text:text, submittedAt:submittedAt
+  });
+  saveRecCache();
+  markSub('quality', S.qTime+'_'+S.qDept, S.date);
+  // 즉시 홈으로
+  S.mode='home'; S.qTime=null; S.qDept=null;
+  render();
+  // 백그라운드 전송
+  postSheet(payload, function(){
+    loadState().then(function(){ saveCache(); if(S.mode==='home') render(); });
+    loadRecords().then(function(){ saveRecCache(); if(S.mode==='records') drawRecs(); });
+  }, function(){ console.log('submit failed'); });
+}
+
+// 품질 분임조 - 간편 진행 체크 화면 (오전 9시 / 오후 8시)
+function showQualityCheck() {
+  var t = TIME_SLOTS.filter(function(x){return x.id===S.qTime;})[0];
+  var dept = DEPTS.filter(function(x){return x.id===S.qDept;})[0];
+  $('hdrInfo').innerHTML = '<strong>'+esc(S.name)+'</strong>'+t.name+' '+dept.name+' 분임조';
+  var note = S.qData.note || '';
+  setMain(
+    '<div class="step-tag">품질 분임조 활동</div>'
+    +'<h1 class="step-title" style="margin-bottom:2px">'+dept.icon+' '+dept.name+' · '+t.name+'</h1>'
+    +'<p class="step-sub">'+S.date+' · 야탑점 킴스클럽</p>'
+    +'<label class="q-field-lbl">작성자 이름</label>'
+    +'<input class="meta-inp" type="text" placeholder="이름 입력" value="'+esc(S.name)+'" oninput="S.name=this.value">'
+    +'<div class="q-field-lbl">특이사항 (선택)</div>'
+    +'<textarea class="q-note-ta" rows="2" placeholder="특이사항이 있으면 입력..." oninput="S.qData.note=this.value">'+esc(note)+'</textarea>'
+    +'<div class="qc-confirm">'+dept.icon+' '+dept.name+' '+t.name+' 분임조 활동을<br><b>진행 완료</b>로 기록합니다.</div>'
+  );
+  setBtm('<button class="btn-sub" onclick="goHome()">← 뒤로</button>'
+    +'<button class="btn-main" onclick="submitQualityCheck()">✅ 진행 완료 제출</button>');
+}
+function submitQualityCheck() {
+  var t = TIME_SLOTS.filter(function(x){return x.id===S.qTime;})[0];
+  var dept = DEPTS.filter(function(x){return x.id===S.qDept;})[0];
+  if (!S.name.trim()) { alert('이름을 입력해주세요.'); return; }
+  var recId = Date.now();
+  var submittedAt = new Date().toLocaleString('ko-KR');
+  var text = S.name + '님 - ' + dept.name + ' ' + t.name + ' 분임조 활동 진행 완료';
+  var payload = {
+    type:'quality', id:recId, date:S.date, name:S.name,
+    timeId:S.qTime, time:t.name, deptId:S.qDept, dept:dept.name,
+    qmode:'check', total:'', products:[], note:S.qData.note||'',
+    text:text, submittedAt:submittedAt
+  };
+  SS.records.unshift({
+    type:'quality', id:recId, date:S.date, name:S.name,
+    timeId:S.qTime, timeName:t.name, deptId:S.qDept, deptName:dept.name,
+    qmode:'check', total:'', products:[], note:S.qData.note||'',
+    text:text, submittedAt:submittedAt
+  });
+  saveRecCache();
+  markSub('quality', S.qTime+'_'+S.qDept, S.date);
+  S.mode='home'; S.qTime=null; S.qDept=null;
+  render();
+  postSheet(payload, function(){
+    loadState().then(function(){ saveCache(); if(S.mode==='home') render(); });
+    loadRecords().then(function(){ saveRecCache(); if(S.mode==='records') drawRecs(); });
+  }, function(){ console.log('submit failed'); });
 }
 
 // EVENING
@@ -622,57 +601,6 @@ function handlePhoto(deptId, input) {
 function delPhoto(id, idx) { S.evePhotos[id].splice(idx,1); showEvening(); }
 function openLbLocal(idx) { lbPhotos = S.evePhotos[S.eveDept] || []; lbIdx=idx; showLb(); }
 
-// SUBMIT
-function postSheet(payload, onOk, onFail) {
-  // no-cors 한 번만 전송 → 중복 저장 방지
-  // (응답은 읽을 수 없지만 요청은 서버에 도달함, Apps Script는 id로 중복 방지)
-  var body = JSON.stringify(payload);
-  fetch(URL_SHEET, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:body})
-    .then(function(){ if(onOk) onOk(); })
-    .catch(function(){ if(onFail) onFail(); });
-}
-function showSubBox(type, icon, msg, sub) {
-  var box=$('subBox'); if(!box) return;
-  box.className='sub-box '+type;
-  $('subIcon').textContent=icon; $('subMsg').textContent=msg; $('subSub').textContent=sub;
-  box.scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-
-function submitAm() {
-  var part = AM_PARTS.filter(function(x){return x.id===S.part;})[0];
-  var rows=[], detItems=[];
-  var cats = getCats();
-  for (var ci=0;ci<cats.length;ci++) {
-    var catId=cats[ci], cat=CATS[catId];
-    for (var ii=0;ii<cat.items.length;ii++) {
-      var a=S.ans[catId+'_'+ii]||'';
-      var lbl=a==='good'?'양호':a==='warn'?'주의':a==='bad'?'불량':'미입력';
-      rows.push({cat:cat.name,item:cat.items[ii],ans:lbl,memo:S.memo[catId+'_'+ii]||''});
-      detItems.push({catId:catId,cat:cat.name,item:cat.items[ii],ans:a,memo:S.memo[catId+'_'+ii]||''});
-    }
-  }
-  var ans_vals=[]; for(var k in S.ans) if(S.ans[k]) ans_vals.push(S.ans[k]);
-  var good_cnt=ans_vals.filter(function(v){return v==='good';}).length;
-  var score=ans_vals.length>0?Math.round(good_cnt/ans_vals.length*100):100;
-  var recId=Date.now();
-  var payload={type:'morning',id:recId,partId:S.part,date:S.date,name:S.name,part:part.name,score:score,submittedAt:new Date().toLocaleString('ko-KR'),items:rows};
-  // 내 기록에 즉시 추가 (기록 화면에서 바로 확인 가능)
-  SS.records.unshift({type:'morning',id:recId,part:S.part,partName:part.name,date:S.date,name:S.name,score:score,submittedAt:payload.submittedAt,items:rows});
-  saveRecCache();
-  showSubBox('loading','⏳','전송 중...','구글시트에 기록하고 있습니다');
-  $('submitBtn').disabled=true;
-  // 즉시 홈으로 이동
-  markSub('morning',S.part,S.date);
-  var savedPart=S.part;
-  S.mode='home'; S.part=null; S.ans={}; S.memo={};
-  render();
-  // 백그라운드 전송
-  postSheet(payload, function(){
-    loadState().then(function(){saveCache();if(S.mode==='home')render();});
-    loadRecords().then(function(){saveRecCache();if(S.mode==='records')drawRecs();});
-  }, function(){ console.log('submit failed, will retry'); });
-}
-
 function submitEve() {
   var dept=EVE_DEPTS.filter(function(d){return d.id===S.eveDept;})[0];
   var photos=S.evePhotos[S.eveDept]||[];
@@ -681,37 +609,26 @@ function submitEve() {
   var recId=Date.now();
   var btn=$('eveBtn'); btn.disabled=true; btn.textContent='📤 전송 중...';
   markSub('evening',S.eveDept,S.date);
-
-  // 사진을 MAX_P개씩 분할 전송 (한번에 보내지 않고 청크로)
-  // 먼저 메타데이터만 전송해서 즉시 완료 표시
-  var metaPayload={type:'evening',id:recId,deptId:S.eveDept,date:S.date,name:S.name,
-    dept:dept.name,photoCount:photos.length,photos:[],note:note,
-    submittedAt:new Date().toLocaleString('ko-KR')};
-
-  // 사진은 별도로 분리해서 전송
+  var submittedAt=new Date().toLocaleString('ko-KR');
   var photoPayload={type:'evening',id:recId,deptId:S.eveDept,date:S.date,name:S.name,
     dept:dept.name,photoCount:photos.length,photos:photos.slice(),note:note,
-    submittedAt:new Date().toLocaleString('ko-KR')};
-
-  // 내 기록에 즉시 추가 (기록 화면에서 바로 확인 가능)
+    submittedAt:submittedAt};
+  // 내 기록에 즉시 추가
   SS.records.unshift({type:'evening',id:recId,dept:S.eveDept,deptName:dept.name,date:S.date,name:S.name,
-    photoCount:photos.length,photoUrls:photos.slice(),note:note,submittedAt:photoPayload.submittedAt});
+    photoCount:photos.length,photoUrls:photos.slice(),note:note,submittedAt:submittedAt});
   saveRecCache();
-
-  // 즉시 성공 화면 표시 (사진 업로드는 백그라운드)
+  // 즉시 성공 화면
   setMain('<div style="text-align:center;padding:60px 20px">'
     +'<div style="font-size:50px;margin-bottom:16px">📷</div>'
     +'<div style="font-size:18px;font-weight:700;color:#2E4A7A;margin-bottom:8px">저녁장 점검 완료!</div>'
     +'<div style="font-size:13px;color:#888" id="uploadStatus">사진 업로드 중... (백그라운드)</div>'
     +'</div>');
   setBtm('<button class="btn-main eve" onclick="goHome()">홈으로 →</button>');
-
-  // 백그라운드에서 사진 전송
   postSheet(photoPayload, function(){
-    var el=document.getElementById('uploadStatus');
+    var el=$('uploadStatus');
     if(el) el.textContent='진열 사진이 구글시트에 업로드되었습니다 ✓';
   }, function(){
-    var el=document.getElementById('uploadStatus');
+    var el=$('uploadStatus');
     if(el) el.innerHTML='<span style="color:#C0392B">사진 전송 실패 - 나중에 다시 시도해주세요</span>';
   });
 }
@@ -729,10 +646,8 @@ function saveRecCache() {
 function showRecords() {
   $('hdrInfo').innerHTML = '<strong>제출 기록</strong>야탑점';
   setBtm('<button class="btn-main" onclick="goHome()">← 홈으로</button>');
-  // 캐시 즉시 표시
   loadRecCache();
   drawRecs();
-  // 백그라운드 서버 갱신
   loadRecords().then(function(){
     saveRecCache();
     if(S.mode==='records') drawRecs();
@@ -745,7 +660,7 @@ function drawRecs() {
     +'<input type="date" class="rec-filter-inp" value="'+S.recDate+'" onchange="S.recDate=this.value;drawRecs()">'
     +'<span style="font-size:11px;color:#888;white-space:nowrap">선택일만</span></div>';
   if (!recs.length) {
-    html += '<div class="rec-empty"><div class="rec-empty-icon">📋</div><div>해당 기간에 기록이 없습니다</div></div>';
+    html += '<div class="rec-empty"><div class="rec-empty-icon">📋</div><div>해당 날짜에 기록이 없습니다</div></div>';
   } else {
     var grouped={};
     recs.forEach(function(r){ var nd=normDate(r.date); if(!grouped[nd])grouped[nd]=[]; grouped[nd].push(r); });
@@ -756,22 +671,24 @@ function drawRecs() {
       var list=grouped[date];
       for(var ri=0;ri<list.length;ri++){
         var r=list[ri];
-        if(r.type==='morning'){
-          var sc=r.score>=90?'g':r.score>=70?'w':'b';
-          var icon=(AM_PARTS.filter(function(p){return p.id===r.part;})[0]||{icon:'📋'}).icon;
-          html+='<div class="rec-item"><div class="rec-icon am" onclick="viewDet('+r.id+')">'+icon+'</div>'
-            +'<div class="rec-body" onclick="viewDet('+r.id+')">'
-            +'<div class="rec-body-title">[오전] '+esc(r.partName)+' 점검</div>'
-            +'<div class="rec-body-sub">'+esc(r.name)+' · '+esc(r.submittedAt)+'</div></div>'
-            +'<div class="rec-score '+sc+'" onclick="viewDet('+r.id+')">'+r.score+'점</div>'
-            +'<button class="rec-del" onclick="delRec('+r.id+')">🗑</button></div>';
-        } else {
-          var icon=(EVE_DEPTS.filter(function(d){return d.id===r.dept;})[0]||{icon:'📷'}).icon;
-          html+='<div class="rec-item"><div class="rec-icon pm" onclick="viewDet('+r.id+')">'+icon+'</div>'
+        if(r.type==='evening'){
+          var eicon=(EVE_DEPTS.filter(function(d){return d.id===r.dept;})[0]||{icon:'📷'}).icon;
+          html+='<div class="rec-item"><div class="rec-icon pm" onclick="viewDet('+r.id+')">'+eicon+'</div>'
             +'<div class="rec-body" onclick="viewDet('+r.id+')">'
             +'<div class="rec-body-title">[저녁] '+esc(r.deptName)+' 진열 점검</div>'
             +'<div class="rec-body-sub">'+esc(r.name)+' · 사진 '+r.photoCount+'장 · '+esc(r.submittedAt)+'</div></div>'
             +'<div style="font-size:13px;font-weight:700;color:#2E4A7A;flex-shrink:0;cursor:pointer" onclick="viewDet('+r.id+')">📷'+r.photoCount+'</div>'
+            +'<button class="rec-del" onclick="delRec('+r.id+')">🗑</button></div>';
+        } else { // quality
+          var qicon=(DEPTS.filter(function(d){return d.id===r.deptId;})[0]||{icon:'📋'}).icon;
+          var rightCol = (r.qmode==='check')
+            ? '<div class="rec-done" onclick="viewDet('+r.id+')">✅ 완료</div>'
+            : '<div class="rec-loss" onclick="viewDet('+r.id+')">'+fmtWon(r.total)+'</div>';
+          html+='<div class="rec-item"><div class="rec-icon am" onclick="viewDet('+r.id+')">'+qicon+'</div>'
+            +'<div class="rec-body" onclick="viewDet('+r.id+')">'
+            +'<div class="rec-body-title">['+esc(r.timeName||'')+'] '+esc(r.deptName)+' 분임조</div>'
+            +'<div class="rec-body-sub">'+esc(r.name)+' · '+esc(r.submittedAt)+'</div></div>'
+            + rightCol
             +'<button class="rec-del" onclick="delRec('+r.id+')">🗑</button></div>';
         }
       }
@@ -782,7 +699,9 @@ function drawRecs() {
 }
 function delRec(id) {
   if (!confirm('이 기록을 삭제하시겠습니까?')) return;
+  DELETED[id]=true; saveDeleted();
   SS.records = SS.records.filter(function(r){return r.id!==id;});
+  saveRecCache();
   postSheet({type:'delete_record',id:id},function(){},function(){});
   drawRecs();
 }
@@ -794,49 +713,39 @@ function viewDet(id) {
 // DETAIL
 function showRecDetail() {
   var rec=S.detailRec; if(!rec){goRecords();return;}
-  if(rec.type==='morning') showAmDet(rec); else showEveDet(rec);
+  if(rec.type==='evening') showEveDet(rec); else showQualityDet(rec);
 }
-function showAmDet(rec) {
-  var part=(AM_PARTS.filter(function(p){return p.id===rec.part;})[0])||{icon:'📋'};
-  $('hdrInfo').innerHTML='<strong>점검 상세</strong>'+rec.date;
-  var sc=rec.score>=90?'#1E8449':rec.score>=75?'#2471A3':rec.score>=60?'#B7770D':'#C0392B';
-  var catMap={};
-  (rec.items||[]).forEach(function(item){ if(!catMap[item.cat])catMap[item.cat]=[]; catMap[item.cat].push(item); });
-  var catHtml='';
-  var catNames=Object.keys(catMap);
-  for(var i=0;i<catNames.length;i++){
-    var cn=catNames[i], items=catMap[cn];
-    catHtml+='<div class="rpt-card"><div class="rpt-title">'+esc(cn)+'</div>';
-    for(var j=0;j<items.length;j++){
-      var item=items[j];
-      // 필드명이 '결과'/'ans'/'answer' 등 무엇이든 상관없이 '값'으로 스캔
-      var raw='', qtext='';
-      for(var key in item){
-        var v=String(item[key]==null?'':item[key]).trim();
-        if(!raw && (v==='good'||v==='warn'||v==='bad'||v==='양호'||v==='주의'||v==='불량'||v==='미입력')) raw=v;
-      }
-      // 질문 텍스트: item/question/q/항목 등 다양한 키 대응 + 길이가 제일 긴 문자열을 질문으로 추정 (메모·결과 제외)
-      qtext = item.item||item.question||item.q||item['항목']||'';
-      if(!qtext){
-        for(var key2 in item){
-          var vv=String(item[key2]==null?'':item[key2]);
-          if(vv.length>qtext.length && vv!==raw && vv!==(item.memo||'') && vv!==(item.cat||'')) qtext=vv;
-        }
-      }
-      var isGood = raw==='good'||raw==='양호';
-      var isWarn = raw==='warn'||raw==='주의';
-      var isBad  = raw==='bad' ||raw==='불량';
-      var al = isGood?'양호':isWarn?'주의':isBad?'불량':'미입력';
-      var ac = isGood?'ans-g':isWarn?'ans-w':isBad?'ans-b':'ans-n';
-      catHtml+='<div class="det-row"><span class="det-num">'+(j+1)+'</span><span class="det-q">'+esc(qtext)+'</span><span class="det-ans '+ac+'">'+al+'</span></div>'+(item.memo?'<div class="det-memo">↳ '+esc(item.memo)+'</div>':'');
-    }
-    catHtml+='</div>';
+function showQualityDet(rec) {
+  var dept=(DEPTS.filter(function(d){return d.id===rec.deptId;})[0])||{icon:'📋'};
+  $('hdrInfo').innerHTML='<strong>분임조 상세</strong>'+rec.date;
+  var text = rec.text || '';
+  var isCheck = (rec.qmode==='check');
+  var hdrRight = isCheck ? '<div class="det-done">✅ 완료</div>' : '<div class="det-loss">'+fmtWon(rec.total)+'</div>';
+  var bodyCards;
+  if (isCheck) {
+    bodyCards = '<div class="rpt-card"><div class="rpt-title">📝 진행 상태</div>'
+      +'<div class="qc-confirm" style="margin-top:0">'+dept.icon+' '+esc(rec.deptName)+' '+esc(rec.timeName||'')+' 분임조 활동<br><b>진행 완료</b></div></div>';
+  } else {
+    var prodRows='';
+    (rec.products||[]).forEach(function(p,i){
+      var kindTag = p.kind ? '<span class="kind-tag">'+esc(p.kind)+'</span> ' : '';
+      prodRows+='<div class="det-row"><span class="det-num">'+(i+1)+'위</span>'
+        +'<span class="det-q">'+kindTag+esc(p.name||'(미입력)')+'</span>'
+        +'<span class="det-ans">'+fmtWon(p.amount)+'</span></div>';
+    });
+    bodyCards = '<div class="rpt-card"><div class="rpt-title">📝 분임조 활동 내용</div>'
+      +'<div class="det-text">'+esc(text)+'</div></div>'
+      +'<div class="rpt-card"><div class="rpt-title">손실 상세</div>'
+      +'<div class="det-row"><span class="det-num">총액</span><span class="det-q">전일 손실 총액</span><span class="det-ans">'+fmtWon(rec.total)+'</span></div>'
+      +prodRows+'</div>';
   }
-  setMain('<div class="step-tag">오전 점검 상세</div>'
-    +'<div class="det-hdr"><div class="det-hdr-icon">'+part.icon+'</div>'
-    +'<div class="det-hdr-info"><div class="det-hdr-title">'+esc(rec.name)+' · '+esc(rec.partName)+'</div>'
-    +'<div class="det-hdr-sub">'+rec.date+' · '+esc(rec.submittedAt)+'</div></div>'
-    +'<div class="det-score" style="color:'+sc+'">'+rec.score+'점</div></div>'+catHtml);
+  setMain('<div class="step-tag">품질 분임조 활동 상세</div>'
+    +'<div class="det-hdr"><div class="det-hdr-icon">'+dept.icon+'</div>'
+    +'<div class="det-hdr-info"><div class="det-hdr-title">'+esc(rec.name)+' · '+esc(rec.deptName)+' 분임조</div>'
+    +'<div class="det-hdr-sub">'+rec.date+' · '+esc(rec.timeName||'')+' · '+esc(rec.submittedAt)+'</div></div>'
+    + hdrRight + '</div>'
+    + bodyCards
+    +(rec.note?'<div class="rpt-card"><div class="rpt-title">특이사항 / 개선 활동</div><div style="font-size:13px;color:#1A1A1A;line-height:1.6">'+esc(rec.note)+'</div></div>':''));
   setBtm('<button class="btn-main" onclick="S.mode=\'records\';render()">← 목록으로</button>');
 }
 function showEveDet(rec) {
@@ -882,7 +791,7 @@ function lbPrev() { lbIdx=(lbIdx-1+lbPhotos.length)%lbPhotos.length; showLb(); }
 function lbNext() { lbIdx=(lbIdx+1)%lbPhotos.length; showLb(); }
 $('lb').addEventListener('click', function(e){ if(e.target===this) closeLb(); });
 
-// 좌우 스와이프로 사진 넘기기
+// 좌우 스와이프
 (function(){
   var sx=0, sy=0, st=0, moved=false;
   var lb = $('lb');
@@ -898,12 +807,10 @@ $('lb').addEventListener('click', function(e){ if(e.target===this) closeLb(); })
     if(!moved) return;
     var t=e.changedTouches[0];
     var dx=t.clientX-sx, dy=t.clientY-sy, dt=Date.now()-st;
-    // 가로 스와이프 (세로보다 가로 이동이 크고, 50px 이상, 1초 이내)
     if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.2 && dt<1000){
       if(dx<0) lbNext(); else lbPrev();
     }
   }, {passive:true});
-  // 데스크톱: 키보드 좌우 화살표
   document.addEventListener('keydown', function(e){
     if($('lb').style.display==='none' || $('lb').style.display==='') return;
     if(e.key==='ArrowLeft') lbPrev();
@@ -912,94 +819,22 @@ $('lb').addEventListener('click', function(e){ if(e.target===this) closeLb(); })
   });
 })();
 
-// ADMIN
-function openAdmin() {
-  $('adminOverlay').style.display='flex';
-  document.body.style.overflow='hidden';
-  if(adminAuthed) renderAdm(); else renderAdmPwd();
-}
-function closeAdmin() { $('adminOverlay').style.display='none'; document.body.style.overflow=''; }
-function renderAdmPwd() {
-  $('adminPanel').innerHTML='<div class="adm-hdr"><div class="adm-title">⚙ 관리자 인증</div><button class="adm-close" onclick="closeAdmin()">닫기</button></div>'
-    +'<div class="pwd-screen"><div class="pwd-title">관리자 비밀번호</div><div class="pwd-sub">비밀번호 입력 (기본: 1234)</div>'
-    +'<input class="pwd-inp" type="password" id="pwdInp" maxlength="10" placeholder="••••" onkeydown="if(event.key===\'Enter\')chkPwd()">'
-    +'<div class="pwd-err" id="pwdErr">비밀번호가 틀렸습니다</div>'
-    +'<button class="btn-pwd" onclick="chkPwd()">확인</button></div>';
-  setTimeout(function(){ var i=$('pwdInp'); if(i) i.focus(); },100);
-}
-function chkPwd() {
-  var val=$('pwdInp').value;
-  if(val===loadPwd()){adminAuthed=true;renderAdm();}
-  else{$('pwdErr').className='pwd-err show';$('pwdInp').value='';}
-}
-function renderAdm() {
-  loadState().then(function(){
-    editCats=clone(CATS);
-    var catHtml='';
-    var catIds=Object.keys(editCats);
-    for(var i=0;i<catIds.length;i++){
-      var catId=catIds[i], cat=editCats[catId];
-      var itemsHtml='';
-      for(var j=0;j<cat.items.length;j++){
-        itemsHtml+='<div class="adm-item-row"><input class="adm-inp" type="text" value="'+esc(cat.items[j])+'" onchange="editCats[\''+catId+'\'].items['+j+']=this.value"><button class="btn-del" onclick="delItem(\''+catId+'\','+j+')">✕</button></div>';
-      }
-      catHtml+='<div class="adm-cat"><div class="adm-cat-hdr"><span style="font-size:18px">'+cat.icon+'</span><span class="adm-cat-name">'+cat.name+'</span></div>'
-        +'<div id="items_'+catId+'">'+itemsHtml+'</div>'
-        +'<button class="btn-add" onclick="addItem(\''+catId+'\')">+ 항목 추가</button></div>';
-    }
-    $('adminPanel').innerHTML='<div class="adm-hdr"><div class="adm-title">⚙ 관리자 설정</div><button class="adm-close" onclick="closeAdmin()">닫기</button></div>'
-      +'<div class="adm-body"><div class="adm-sec-title">📝 오전 점검 항목 수정</div>'+catHtml+'<div style="height:60px"></div></div>'
-      +'<div class="adm-save-bar"><button class="btn-adm-save" onclick="saveAdm()">✓ 전체 기기에 저장</button></div>';
-  });
-}
-function addItem(catId) {
-  editCats[catId].items.push('');
-  var idx=editCats[catId].items.length-1;
-  var row=document.createElement('div'); row.className='adm-item-row';
-  row.innerHTML='<input class="adm-inp" type="text" placeholder="항목 내용 입력" onchange="editCats[\''+catId+'\'].items['+idx+']=this.value"><button class="btn-del" onclick="delItem(\''+catId+'\','+idx+')">✕</button>';
-  $('items_'+catId).appendChild(row);
-  row.querySelector('input').focus();
-}
-function delItem(catId, idx) {
-  editCats[catId].items.splice(idx,1);
-  var html='';
-  for(var i=0;i<editCats[catId].items.length;i++){
-    html+='<div class="adm-item-row"><input class="adm-inp" type="text" value="'+esc(editCats[catId].items[i])+'" onchange="editCats[\''+catId+'\'].items['+i+']=this.value"><button class="btn-del" onclick="delItem(\''+catId+'\','+i+')">✕</button></div>';
-  }
-  $('items_'+catId).innerHTML=html;
-}
-function saveAdm() {
-  var catIds=Object.keys(editCats);
-  for(var i=0;i<catIds.length;i++){
-    var catId=catIds[i];
-    var inputs=$('items_'+catId).querySelectorAll('input');
-    for(var j=0;j<inputs.length;j++) editCats[catId].items[j]=inputs[j].value.trim();
-    editCats[catId].items=editCats[catId].items.filter(function(v){return v!=='';});
-  }
-  CATS=clone(editCats);
-  postSheet({type:'save_cats',cats:CATS}, function(){}, function(){});
-  closeAdmin();
-  loadState().then(render);
-  alert('저장되었습니다! 모든 기기에 적용됩니다 ✓');
-}
-
-// INIT - 캐시 우선 즉시 표시
+// INIT - 캐시 우선
 function loadCached() {
   try {
     var cs = localStorage.getItem('kims_state_cache');
     if (cs) {
       var obj = JSON.parse(cs);
       if (obj.submissions) SS.submissions = obj.submissions;
-      if (obj.cats) CATS = obj.cats;
     }
   } catch(e) {}
 }
 
-loadCached();          // 캐시 즉시 로드
+loadCached();
+loadRecCache();
 S.mode = 'home';
-render();              // 캐시 기준으로 바로 화면 표시
+render();
 
-// 백그라운드에서 서버 갱신 (첫 진입 1회) - 상태 + 기록 동시 로드
 loadState().then(function(){
   saveCache();
   if (S.mode === 'home') render();
@@ -1009,41 +844,25 @@ loadRecords().then(function(){
   if (S.mode === 'records') drawRecs();
 });
 
-// 20초마다 자동 동기화 → 다른 기기 제출 자동 반영
-// 홈/기록 화면에서 모두 동작, 화면에 맞춰 갱신
+// 20초마다 자동 동기화
 setInterval(function(){
   if (document.visibilityState === 'hidden') return;
   if (S.mode === 'home') {
-    loadState().then(function(){
-      saveCache();
-      if (S.mode === 'home') render();
-    });
-    loadRecords().then(function(){
-      saveRecCache();
-    });
+    loadState().then(function(){ saveCache(); if (S.mode === 'home') render(); });
+    loadRecords().then(function(){ saveRecCache(); });
   } else if (S.mode === 'records') {
-    loadRecords().then(function(){
-      saveRecCache();
-      if (S.mode === 'records') drawRecs();
-    });
+    loadRecords().then(function(){ saveRecCache(); if (S.mode === 'records') drawRecs(); });
     loadState().then(function(){ saveCache(); });
   }
 }, 20000);
 
-// 앱이 백그라운드에서 다시 돌아왔을 때 즉시 동기화
 document.addEventListener('visibilitychange', function(){
   if (document.visibilityState !== 'visible') return;
   if (S.mode === 'home') {
-    loadState().then(function(){
-      saveCache();
-      if (S.mode === 'home') render();
-    });
+    loadState().then(function(){ saveCache(); if (S.mode === 'home') render(); });
     loadRecords().then(function(){ saveRecCache(); });
   } else if (S.mode === 'records') {
-    loadRecords().then(function(){
-      saveRecCache();
-      if (S.mode === 'records') drawRecs();
-    });
+    loadRecords().then(function(){ saveRecCache(); if (S.mode === 'records') drawRecs(); });
   }
 });
 </script>
