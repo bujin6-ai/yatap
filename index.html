@@ -249,7 +249,9 @@ function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 function cleanNum(v){ return String(v==null?'':v).replace(/[^0-9]/g,''); }
-function fmtWon(v){ var n=cleanNum(v); return n ? Number(n).toLocaleString('ko-KR')+'원' : '-'; }
+// 금액(만원) - 숫자와 소수점 1개만 허용
+function cleanAmt(v){ var s=String(v==null?'':v).replace(/[^0-9.]/g,''); var i=s.indexOf('.'); if(i>=0){ s=s.slice(0,i+1)+s.slice(i+1).replace(/\./g,''); } return s; }
+function fmtWon(v){ var s=cleanAmt(v); if(!s||s==='.') return '-'; var n=Number(s); return isNaN(n)?'-':n.toLocaleString('ko-KR')+'만원'; }
 // 로컬(한국) 기준 YYYY-MM-DD
 function todayLocal(){
   var d = new Date();
@@ -292,7 +294,7 @@ function setBtm(html) { $('btmIn').innerHTML = html; }
 
 // 분임조 활동 문장 자동 작성
 function composeQ(deptName, d) {
-  function won(v){ var n=cleanNum(v); return n ? Number(n).toLocaleString('ko-KR')+'원' : '[??? 원]'; }
+  function won(v){ var s=cleanAmt(v); return (s && s!=='.') ? Number(s).toLocaleString('ko-KR')+'만원' : '[??? 만원]'; }
   function nm(v){ return (v && v.trim()) ? v.trim() : '[????]'; }
   function kd(v){ return v ? '('+v+') ' : ''; }
   return '전일 우리 ' + deptName + '팀에서 버려진 손실난 금액은 ' + won(d.total) + ' 입니다. '
@@ -422,16 +424,16 @@ function showQuality() {
     return '<div class="q-prow"><span class="rank">'+rank+'위</span>'
       + kindSel(kk)
       +'<input class="meta-inp q-pname" placeholder="상품명" value="'+esc(d[nk])+'" oninput="S.qData.'+nk+'=this.value;updateQPrev()">'
-      +'<input class="meta-inp q-pamt" inputmode="numeric" placeholder="금액(원)" value="'+esc(d[ak])+'" oninput="S.qData.'+ak+'=this.value;updateQPrev()"></div>';
+      +'<input class="meta-inp q-pamt" inputmode="decimal" placeholder="금액(만원)" value="'+esc(d[ak])+'" oninput="S.qData.'+ak+'=this.value;updateQPrev()"></div>';
   }
   setMain(
     '<div class="step-tag">품질 분임조 활동</div>'
     +'<h1 class="step-title" style="margin-bottom:2px">'+dept.icon+' '+dept.name+' · '+t.name+'</h1>'
     +'<p class="step-sub">'+S.date+' · 야탑점 킴스클럽</p>'
     +'<div class="q-tmpl">전일 우리 <b>'+dept.name+'팀</b>에서 버려지거나 할인 판매된 상품과 금액 작성</div>'
-    +'<label class="q-field-lbl">전일 손실 총액 (원)</label>'
-    +'<input class="meta-inp" inputmode="numeric" placeholder="예: 125000" value="'+esc(d.total)+'" oninput="S.qData.total=this.value;updateQPrev()">'
-    +'<div class="q-field-lbl">손실 큰 상품 TOP 3 <span style="font-weight:400;color:#888">(구분 · 상품명 · 금액)</span></div>'
+    +'<label class="q-field-lbl">전일 손실 총액 (만원)</label>'
+    +'<input class="meta-inp" inputmode="decimal" placeholder="예: 12.5" value="'+esc(d.total)+'" oninput="S.qData.total=this.value;updateQPrev()">'
+    +'<div class="q-field-lbl">손실 큰 상품 TOP 3 <span style="font-weight:400;color:#888">(구분 · 상품명 · 금액 만원)</span></div>'
     + prow(1,'p1k','p1n','p1a')
     + prow(2,'p2k','p2n','p2a')
     + prow(3,'p3k','p3n','p3a')
@@ -461,11 +463,11 @@ function submitQuality() {
   var t = TIME_SLOTS.filter(function(x){return x.id===S.qTime;})[0];
   var dept = DEPTS.filter(function(x){return x.id===S.qDept;})[0];
   var d = S.qData;
-  if (!cleanNum(d.total)) { alert('전일 손실 총액을 입력해주세요.'); return; }
+  if (!cleanAmt(d.total)) { alert('전일 손실 총액을 입력해주세요.'); return; }
   var products = [
-    {kind:d.p1k||'', name:(d.p1n||'').trim(), amount:cleanNum(d.p1a)},
-    {kind:d.p2k||'', name:(d.p2n||'').trim(), amount:cleanNum(d.p2a)},
-    {kind:d.p3k||'', name:(d.p3n||'').trim(), amount:cleanNum(d.p3a)}
+    {kind:d.p1k||'', name:(d.p1n||'').trim(), amount:cleanAmt(d.p1a)},
+    {kind:d.p2k||'', name:(d.p2n||'').trim(), amount:cleanAmt(d.p2a)},
+    {kind:d.p3k||'', name:(d.p3n||'').trim(), amount:cleanAmt(d.p3a)}
   ];
   var text = composeQ(dept.name, d);
   var recId = Date.now();
@@ -473,14 +475,14 @@ function submitQuality() {
   var payload = {
     type:'quality', id:recId, date:S.date, name:S.name,
     timeId:S.qTime, time:t.name, deptId:S.qDept, dept:dept.name,
-    qmode:'full', total:cleanNum(d.total), products:products, note:d.note||'',
+    qmode:'full', total:cleanAmt(d.total), products:products, note:d.note||'',
     text:text, submittedAt:submittedAt
   };
   // 내 기록에 즉시 추가
   SS.records.unshift({
     type:'quality', id:recId, date:S.date, name:S.name,
     timeId:S.qTime, timeName:t.name, deptId:S.qDept, deptName:dept.name,
-    qmode:'full', total:cleanNum(d.total), products:products, note:d.note||'',
+    qmode:'full', total:cleanAmt(d.total), products:products, note:d.note||'',
     text:text, submittedAt:submittedAt
   });
   saveRecCache();
