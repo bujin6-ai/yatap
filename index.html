@@ -71,6 +71,18 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 .q-prev{background:#1A2535;color:#EDEFF5;border-radius:10px;padding:14px 16px;font-size:13.5px;line-height:1.85;margin-bottom:8px}
 .qc-confirm{margin-top:22px;background:#EAF8F0;border:1px solid #27AE60;border-radius:12px;padding:20px 16px;text-align:center;font-size:14px;line-height:1.7;color:#1E8449}
 .qc-confirm b{font-size:16px}
+/* 고객 반품 */
+.sec-tag.rt{background:#1E8449}
+.ret-enter{background:#FFF;border:1.5px solid #E0DFD9;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:8px}
+.ret-enter:hover{border-color:#1E8449}
+.ret-enter-t{font-size:15px;font-weight:700;color:#1A1A1A}
+.ret-enter-s{font-size:11px;color:#888;margin-top:2px}
+.ret-enter-arrow{margin-left:auto;color:#1E8449;font-weight:900;font-size:18px}
+.ret-row{display:flex;gap:10px}
+.ret-sel{-webkit-appearance:menulist;appearance:menulist}
+.ret-sess{background:#EAF8F0;border:1px solid #27AE60;border-radius:10px;padding:12px 14px;margin-bottom:16px}
+.ret-sess-hdr{font-size:12px;font-weight:700;color:#1E8449;margin-bottom:6px}
+.ret-sess-item{font-size:12px;color:#1A1A1A;padding:2px 0;line-height:1.4}
 .q-note-ta{width:100%;background:#F8F7F4;border:1px solid #E0DFD9;border-radius:8px;padding:8px 10px;font-family:inherit;font-size:13px;color:#1A1A1A;resize:none;outline:none;line-height:1.5}
 .q-note-ta:focus{border-color:#D0021B}
 /* 저녁장 사진 */
@@ -104,6 +116,10 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 .rec-empty-icon{font-size:40px;margin-bottom:12px}
 .rec-grp{margin-bottom:20px}
 .rec-grp-hdr{font-size:12px;font-weight:700;color:#888;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #E8E7E2}
+.rec-sec{margin-bottom:18px}
+.rec-sec-hdr{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:900;color:#1A2535;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid #1A2535}
+.rec-sec-cnt{margin-left:auto;font-size:11px;font-weight:700;color:#888}
+.rec-sec-empty{font-size:12px;color:#bbb;padding:6px 2px 10px}
 .rec-item{background:#FFF;border:1px solid #E8E7E2;border-radius:10px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
 .rec-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;cursor:pointer}
 .rec-icon.am{background:#FDECEA}
@@ -113,6 +129,8 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 .rec-body-sub{font-size:12px;color:#888}
 .rec-loss{font-size:14px;font-weight:900;color:#C0392B;flex-shrink:0;cursor:pointer;white-space:nowrap}
 .rec-done{font-size:13px;font-weight:800;color:#1E8449;flex-shrink:0;cursor:pointer;white-space:nowrap}
+.rec-note{font-size:12px;font-weight:700;color:#1E8449;flex-shrink:0;cursor:pointer;white-space:nowrap}
+.rec-none{font-size:12px;font-weight:600;color:#aaa;flex-shrink:0;cursor:pointer;white-space:nowrap}
 .rec-del{width:32px;height:32px;background:#FDECEA;border:none;border-radius:8px;color:#C0392B;font-size:15px;cursor:pointer;flex-shrink:0}
 .det-hdr{background:#FFF;border:1px solid #E8E7E2;border-radius:12px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
 .det-hdr-icon{font-size:32px}
@@ -177,6 +195,9 @@ var TIME_SLOTS = [
 ];
 // 손실 상품 구분 옵션
 var LOSS_KINDS = ['할인','폐기','재고로스'];
+// 고객 반품 - 사유(선도저하/당도/사이즈/기타) · 처리결과
+var RET_REASONS = ['선도저하','당도','사이즈','기타'];
+var RET_RESULTS = ['환불처리','제품교환','폐기','기타'];
 // 부서 (분임조 / 저녁장 공통)
 var DEPTS = [
   {id:'farm',   name:'농산', icon:'🥬'},
@@ -252,6 +273,7 @@ function cleanNum(v){ return String(v==null?'':v).replace(/[^0-9]/g,''); }
 // 금액(만원) - 숫자와 소수점 1개만 허용
 function cleanAmt(v){ var s=String(v==null?'':v).replace(/[^0-9.]/g,''); var i=s.indexOf('.'); if(i>=0){ s=s.slice(0,i+1)+s.slice(i+1).replace(/\./g,''); } return s; }
 function fmtWon(v){ var s=cleanAmt(v); if(!s||s==='.') return '-'; var n=Number(s); return isNaN(n)?'-':n.toLocaleString('ko-KR')+'만원'; }
+function fmtPlain(v){ var n=cleanNum(v); return n ? Number(n).toLocaleString('ko-KR') : '0'; }
 // 로컬(한국) 기준 YYYY-MM-DD
 function todayLocal(){
   var d = new Date();
@@ -284,7 +306,10 @@ var S = {
   evePhotos: {farm:[], sea:[], meat:[], grocery:[]},
   eveNotes:  {farm:'', sea:'', meat:'', grocery:''},
   detailRec: null,
-  recDate: todayLocal()
+  recDate: todayLocal(),
+  // 고객 반품
+  ret: {date: todayLocal(), store:'야탑점', dept:'농산', item:'', code:'', name:'', qty:'1', amount:'', receipt:'', reason:'선도저하', detail:'', result:'환불처리'},
+  retSession: []
 };
 var lbPhotos = [], lbIdx = 0;
 
@@ -325,6 +350,7 @@ function render() {
   else if (S.mode === 'quality')    showQuality();
   else if (S.mode === 'qcheck')     showQualityCheck();
   else if (S.mode === 'evening')    showEvening();
+  else if (S.mode === 'return')     showReturn();
   else if (S.mode === 'records')    showRecords();
   else if (S.mode === 'rec-detail') showRecDetail();
 }
@@ -386,6 +412,10 @@ function showHome() {
     + qHtml
     +'<div class="sec-label"><span class="sec-tag pm">저녁</span>저녁장 매대 진열 점검</div>'
     +'<div class="eve-grid">'+eveHtml+'</div>'
+    +'<div class="sec-label"><span class="sec-tag rt">반품</span>고객 반품리스트 등록</div>'
+    +'<div class="ret-enter" onclick="openReturn()"><span style="font-size:24px">📦</span>'
+    +'<div><div class="ret-enter-t">고객 반품 등록하기</div><div class="ret-enter-s">반품·폐기 상품을 구글시트에 기록</div></div>'
+    +'<span class="ret-enter-arrow">→</span></div>'
   );
   setBtm('<button class="btn-main'+(S.eveDept?' eve':'')+'" id="startBtn" onclick="startAction()" '+(S.name.trim()&&S.eveDept?'':'disabled')+'>'+(S.eveDept?'📷 사진 촬영 시작 →':'위에서 분임조 활동 또는 저녁장 부서를 선택하세요')+'</button>');
 }
@@ -545,6 +575,67 @@ function submitQualityCheck() {
   }, function(){ console.log('submit failed'); });
 }
 
+// 고객 반품 등록
+function openReturn() { S.ret.date = S.date || todayLocal(); S.mode='return'; render(); }
+function showReturn() {
+  $('hdrInfo').innerHTML = '<strong>고객 반품 등록</strong>야탑점';
+  var r = S.ret;
+  function sel(field, arr) {
+    var o='';
+    for (var i=0;i<arr.length;i++) o+='<option value="'+esc(arr[i])+'"'+(r[field]===arr[i]?' selected':'')+'>'+esc(arr[i])+'</option>';
+    return '<select class="meta-inp ret-sel" onchange="S.ret.'+field+'=this.value">'+o+'</select>';
+  }
+  var deptNames = DEPTS.map(function(d){ return d.name; });
+  var sessHtml='';
+  if (S.retSession.length) {
+    sessHtml='<div class="ret-sess"><div class="ret-sess-hdr">✓ 이번에 등록한 반품 ('+S.retSession.length+'건)</div>';
+    for (var i=S.retSession.length-1;i>=0;i--) {
+      var s=S.retSession[i];
+      sessHtml+='<div class="ret-sess-item">· '+esc(s.dept)+' · '+esc(s.name)+' · '+esc(s.qty||'')+'개 · '+fmtPlain(s.amount)+'원</div>';
+    }
+    sessHtml+='</div>';
+  }
+  setMain(
+    '<div class="step-tag">고객 반품리스트</div>'
+    +'<h1 class="step-title" style="margin-bottom:2px">📦 고객 반품 등록</h1>'
+    +'<p class="step-sub">매일 마감 시 작성 · 야탑점</p>'
+    + sessHtml
+    +'<label class="q-field-lbl">날짜</label><input class="meta-inp" type="date" value="'+r.date+'" onchange="S.ret.date=this.value">'
+    +'<div class="ret-row"><div style="flex:1"><label class="q-field-lbl">점포명</label><input class="meta-inp" type="text" value="'+esc(r.store)+'" oninput="S.ret.store=this.value"></div>'
+    +'<div style="flex:1"><label class="q-field-lbl">구분</label>'+sel('dept',deptNames)+'</div></div>'
+    +'<label class="q-field-lbl">아이템</label><input class="meta-inp" type="text" placeholder="예: 딸기" value="'+esc(r.item)+'" oninput="S.ret.item=this.value">'
+    +'<label class="q-field-lbl">상품코드</label><input class="meta-inp" inputmode="numeric" placeholder="바코드 / 상품코드" value="'+esc(r.code)+'" oninput="S.ret.code=this.value">'
+    +'<label class="q-field-lbl">상품명</label><input class="meta-inp" type="text" placeholder="상품명" value="'+esc(r.name)+'" oninput="S.ret.name=this.value">'
+    +'<div class="ret-row"><div style="flex:1"><label class="q-field-lbl">수량</label><input class="meta-inp" inputmode="numeric" value="'+esc(r.qty)+'" oninput="S.ret.qty=this.value"></div>'
+    +'<div style="flex:1.5"><label class="q-field-lbl">금액 (원)</label><input class="meta-inp" inputmode="numeric" placeholder="예: 5990" value="'+esc(r.amount)+'" oninput="S.ret.amount=this.value"></div></div>'
+    +'<label class="q-field-lbl">영수증번호 <span style="font-weight:400;color:#888">(반품 시 · 7017/7018호기)</span></label><input class="meta-inp" type="text" placeholder="예: 7017-0118" value="'+esc(r.receipt)+'" oninput="S.ret.receipt=this.value">'
+    +'<label class="q-field-lbl">사유</label>'+sel('reason',RET_REASONS)
+    +'<label class="q-field-lbl">상세사유</label><input class="meta-inp" type="text" placeholder="예: 무름, 썩음, 쩐내 등" value="'+esc(r.detail)+'" oninput="S.ret.detail=this.value">'
+    +'<label class="q-field-lbl">반품 상품 처리 결과</label>'+sel('result',RET_RESULTS)
+    +'<div style="height:4px"></div>'
+  );
+  setBtm('<button class="btn-sub" onclick="goHome()">← 홈</button>'
+    +'<button class="btn-main" style="background:#1E8449" onclick="submitReturn()">📦 반품 등록</button>');
+}
+function submitReturn() {
+  var r = S.ret;
+  if (!r.name.trim()) { alert('상품명을 입력해주세요.'); return; }
+  var payload = {
+    type:'return', id:Date.now(),
+    date:r.date, store:(r.store||'').trim(), dept:r.dept,
+    item:(r.item||'').trim(), code:(r.code||'').trim(), name:r.name.trim(),
+    qty:cleanNum(r.qty), amount:cleanNum(r.amount), receipt:(r.receipt||'').trim(),
+    reason:r.reason, detail:(r.detail||'').trim(), result:r.result,
+    submittedAt:new Date().toLocaleString('ko-KR')
+  };
+  S.retSession.push({dept:r.dept, name:r.name.trim(), qty:cleanNum(r.qty), amount:cleanNum(r.amount)});
+  postSheet(payload, function(){}, function(){});
+  // 품목 관련 항목만 초기화(날짜·점포·구분은 유지 → 연속 입력 편리)
+  S.ret.item=''; S.ret.code=''; S.ret.name=''; S.ret.qty='1'; S.ret.amount=''; S.ret.receipt=''; S.ret.detail='';
+  showReturn();
+  window.scrollTo(0,0);
+}
+
 // EVENING
 function showEvening() {
   var dept = EVE_DEPTS.filter(function(d){return d.id===S.eveDept;})[0];
@@ -664,40 +755,65 @@ function drawRecs() {
   if (!recs.length) {
     html += '<div class="rec-empty"><div class="rec-empty-icon">📋</div><div>해당 날짜에 기록이 없습니다</div></div>';
   } else {
-    var grouped={};
-    recs.forEach(function(r){ var nd=normDate(r.date); if(!grouped[nd])grouped[nd]=[]; grouped[nd].push(r); });
-    var dates=Object.keys(grouped).sort(function(a,b){return b.localeCompare(a);});
-    for(var di=0;di<dates.length;di++){
-      var date=dates[di];
-      html+='<div class="rec-grp"><div class="rec-grp-hdr">'+date+'</div>';
-      var list=grouped[date];
-      for(var ri=0;ri<list.length;ri++){
-        var r=list[ri];
-        if(r.type==='evening'){
-          var eicon=(EVE_DEPTS.filter(function(d){return d.id===r.dept;})[0]||{icon:'📷'}).icon;
-          html+='<div class="rec-item"><div class="rec-icon pm" onclick="viewDet('+r.id+')">'+eicon+'</div>'
-            +'<div class="rec-body" onclick="viewDet('+r.id+')">'
-            +'<div class="rec-body-title">[저녁] '+esc(r.deptName)+' 진열 점검</div>'
-            +'<div class="rec-body-sub">'+esc(r.name)+' · 사진 '+r.photoCount+'장 · '+esc(r.submittedAt)+'</div></div>'
-            +'<div style="font-size:13px;font-weight:700;color:#2E4A7A;flex-shrink:0;cursor:pointer" onclick="viewDet('+r.id+')">📷'+r.photoCount+'</div>'
-            +'<button class="rec-del" onclick="delRec('+r.id+')">🗑</button></div>';
-        } else { // quality
-          var qicon=(DEPTS.filter(function(d){return d.id===r.deptId;})[0]||{icon:'📋'}).icon;
-          var rightCol = (r.qmode==='check')
-            ? '<div class="rec-done" onclick="viewDet('+r.id+')">✅ 완료</div>'
-            : '<div class="rec-loss" onclick="viewDet('+r.id+')">'+fmtWon(r.total)+'</div>';
-          html+='<div class="rec-item"><div class="rec-icon am" onclick="viewDet('+r.id+')">'+qicon+'</div>'
-            +'<div class="rec-body" onclick="viewDet('+r.id+')">'
-            +'<div class="rec-body-title">['+esc(r.timeName||'')+'] '+esc(r.deptName)+' 분임조</div>'
-            +'<div class="rec-body-sub">'+esc(r.name)+' · '+esc(r.submittedAt)+'</div></div>'
-            + rightCol
-            +'<button class="rec-del" onclick="delRec('+r.id+')">🗑</button></div>';
-        }
+    var deptOrder = {}; DEPTS.forEach(function(d,i){ deptOrder[d.id]=i; });
+    function deptIdOf(r){ return r.type==='evening' ? r.dept : r.deptId; }
+    function byDept(a,b){
+      var oa = deptOrder[deptIdOf(a)]; if(oa==null) oa=9;
+      var ob = deptOrder[deptIdOf(b)]; if(ob==null) ob=9;
+      return oa - ob;
+    }
+    var SECTIONS = [
+      {icon:'🌅', label:'오전 9시 분임조', test:function(r){ return r.type==='quality' && r.timeId==='am9'; }},
+      {icon:'☀️', label:'오후 2시 분임조', test:function(r){ return r.type==='quality' && r.timeId==='pm2'; }},
+      {icon:'🌇', label:'오후 8시 분임조', test:function(r){ return r.type==='quality' && r.timeId==='pm8'; }},
+      {icon:'📷', label:'저녁장 매대 진열점검', test:function(r){ return r.type==='evening'; }}
+    ];
+    for (var si=0; si<SECTIONS.length; si++) {
+      var sec = SECTIONS[si];
+      var items = recs.filter(sec.test).sort(byDept);
+      html += '<div class="rec-sec"><div class="rec-sec-hdr"><span>'+sec.icon+'</span><span>'+sec.label+'</span>'
+        + '<span class="rec-sec-cnt">'+items.length+'/'+DEPTS.length+'</span></div>';
+      if (!items.length) {
+        html += '<div class="rec-sec-empty">— 등록된 기록 없음</div>';
+      } else {
+        for (var ri=0; ri<items.length; ri++) html += recRowHtml(items[ri]);
       }
-      html+='</div>';
+      html += '</div>';
     }
   }
   setMain(html);
+}
+// 체크형(오전9시/오후8시) 여부 - qmode 없으면 시간대 mode로 판별
+function qIsCheck(r) {
+  if (r.qmode) return r.qmode === 'check';
+  var t = TIME_SLOTS.filter(function(x){ return x.id===r.timeId; })[0];
+  return t ? t.mode==='check' : false;
+}
+function recRowHtml(r) {
+  if (r.type==='evening') {
+    var eicon=(EVE_DEPTS.filter(function(d){return d.id===r.dept;})[0]||{icon:'📷'}).icon;
+    return '<div class="rec-item"><div class="rec-icon pm" onclick="viewDet('+r.id+')">'+eicon+'</div>'
+      +'<div class="rec-body" onclick="viewDet('+r.id+')">'
+      +'<div class="rec-body-title">'+esc(r.deptName)+' 진열</div>'
+      +'<div class="rec-body-sub">'+esc(r.name)+' · 사진 '+r.photoCount+'장 · '+esc(r.submittedAt)+'</div></div>'
+      +'<div style="font-size:13px;font-weight:700;color:#2E4A7A;flex-shrink:0;cursor:pointer" onclick="viewDet('+r.id+')">📷'+r.photoCount+'</div>'
+      +'<button class="rec-del" onclick="delRec('+r.id+')">🗑</button></div>';
+  }
+  var qicon=(DEPTS.filter(function(d){return d.id===r.deptId;})[0]||{icon:'📋'}).icon;
+  var rightCol;
+  if (qIsCheck(r)) {
+    rightCol = r.note
+      ? '<div class="rec-note" onclick="viewDet('+r.id+')">📝 특이사항</div>'
+      : '<div class="rec-none" onclick="viewDet('+r.id+')">특이사항없음</div>';
+  } else {
+    rightCol = '<div class="rec-loss" onclick="viewDet('+r.id+')">'+fmtWon(r.total)+'</div>';
+  }
+  return '<div class="rec-item"><div class="rec-icon am" onclick="viewDet('+r.id+')">'+qicon+'</div>'
+    +'<div class="rec-body" onclick="viewDet('+r.id+')">'
+    +'<div class="rec-body-title">'+esc(r.deptName)+'</div>'
+    +'<div class="rec-body-sub">'+esc(r.name)+' · '+esc(r.submittedAt)+'</div></div>'
+    + rightCol
+    +'<button class="rec-del" onclick="delRec('+r.id+')">🗑</button></div>';
 }
 function delRec(id) {
   if (!confirm('이 기록을 삭제하시겠습니까?')) return;
@@ -721,12 +837,14 @@ function showQualityDet(rec) {
   var dept=(DEPTS.filter(function(d){return d.id===rec.deptId;})[0])||{icon:'📋'};
   $('hdrInfo').innerHTML='<strong>분임조 상세</strong>'+rec.date;
   var text = rec.text || '';
-  var isCheck = (rec.qmode==='check');
+  var isCheck = qIsCheck(rec);
   var hdrRight = isCheck ? '<div class="det-done">✅ 완료</div>' : '<div class="det-loss">'+fmtWon(rec.total)+'</div>';
   var bodyCards;
   if (isCheck) {
+    var noteHtml = rec.note ? esc(rec.note) : '<span style="color:#888">특이사항없음</span>';
     bodyCards = '<div class="rpt-card"><div class="rpt-title">📝 진행 상태</div>'
-      +'<div class="qc-confirm" style="margin-top:0">'+dept.icon+' '+esc(rec.deptName)+' '+esc(rec.timeName||'')+' 분임조 활동<br><b>진행 완료</b></div></div>';
+      +'<div class="qc-confirm" style="margin-top:0">'+dept.icon+' '+esc(rec.deptName)+' '+esc(rec.timeName||'')+' 분임조 활동<br><b>진행 완료</b></div></div>'
+      +'<div class="rpt-card"><div class="rpt-title">특이사항</div><div style="font-size:13px;color:#1A1A1A;line-height:1.6">'+noteHtml+'</div></div>';
   } else {
     var prodRows='';
     (rec.products||[]).forEach(function(p,i){
@@ -747,7 +865,7 @@ function showQualityDet(rec) {
     +'<div class="det-hdr-sub">'+rec.date+' · '+esc(rec.timeName||'')+' · '+esc(rec.submittedAt)+'</div></div>'
     + hdrRight + '</div>'
     + bodyCards
-    +(rec.note?'<div class="rpt-card"><div class="rpt-title">특이사항 / 개선 활동</div><div style="font-size:13px;color:#1A1A1A;line-height:1.6">'+esc(rec.note)+'</div></div>':''));
+    +((!isCheck && rec.note)?'<div class="rpt-card"><div class="rpt-title">특이사항 / 개선 활동</div><div style="font-size:13px;color:#1A1A1A;line-height:1.6">'+esc(rec.note)+'</div></div>':''));
   setBtm('<button class="btn-main" onclick="S.mode=\'records\';render()">← 목록으로</button>');
 }
 function showEveDet(rec) {
