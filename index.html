@@ -272,7 +272,12 @@ function shiftDate(ds, n){
   return fmtLocal(d);
 }
 // 홈/기록 날짜 화살표
-function homeShiftDate(n){ S.date=shiftDate(S.date,n); loadState().then(showHome); }
+function homeSetDate(v){
+  S.date = v;
+  showHome();  // 캐시로 즉시 렌더
+  loadState().then(function(){ saveCache(); if(S.mode==='home') showHome(); }); // 서버 갱신은 백그라운드
+}
+function homeShiftDate(n){ homeSetDate(shiftDate(S.date,n)); }
 function recShiftDate(n){ S.recDate=shiftDate(S.recDate,n); drawRecs(); }
 // 토스트 메시지
 function showToast(msg){
@@ -439,7 +444,7 @@ function showHome() {
     +'<div class="meta-row">'
     +'<div><label class="meta-lbl">활동일</label>'
     +'<div class="date-nav"><button class="date-arrow" onclick="homeShiftDate(-1)">◀</button>'
-    +'<input class="meta-inp" type="date" id="dateInp" value="'+S.date+'" onchange="S.date=this.value;loadState().then(showHome)">'
+    +'<input class="meta-inp" type="date" id="dateInp" value="'+S.date+'" onchange="homeSetDate(this.value)">'
     +'<button class="date-arrow" onclick="homeShiftDate(1)">▶</button></div></div>'
     +'<div><label class="meta-lbl">작성자 이름</label>'
     +'<input class="meta-inp" type="text" id="nameInp" placeholder="이름 입력" value="'+esc(S.name)+'" oninput="S.name=this.value;chkReady()"></div>'
