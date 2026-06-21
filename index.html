@@ -447,7 +447,7 @@ function showHome() {
     +'<input class="meta-inp" type="date" id="dateInp" value="'+S.date+'" onchange="homeSetDate(this.value)">'
     +'<button class="date-arrow" onclick="homeShiftDate(1)">▶</button></div></div>'
     +'<div><label class="meta-lbl">작성자 이름</label>'
-    +'<input class="meta-inp" type="text" id="nameInp" placeholder="이름 입력" value="'+esc(S.name)+'" oninput="S.name=this.value;chkReady()"></div>'
+    +'<input class="meta-inp" type="text" id="nameInp" placeholder="이름 입력" value="'+esc(S.name)+'" oninput="S.name=this.value;saveName(this.value);chkReady()"></div>'
     +'</div>'
     +'<div class="sec-label"><span class="sec-tag">분임조</span>시간대별 품질 분임조 활동</div>'
     + qHtml
@@ -579,7 +579,7 @@ function showQualityCheck() {
     +'<h1 class="step-title" style="margin-bottom:2px">'+dept.icon+' '+dept.name+' · '+t.name+'</h1>'
     +'<p class="step-sub">'+S.date+' · 야탑점 킴스클럽</p>'
     +'<label class="q-field-lbl">작성자 이름</label>'
-    +'<input class="meta-inp" type="text" placeholder="이름 입력" value="'+esc(S.name)+'" oninput="S.name=this.value">'
+    +'<input class="meta-inp" type="text" placeholder="이름 입력" value="'+esc(S.name)+'" oninput="S.name=this.value;saveName(this.value)">'
     +'<div class="q-field-lbl">특이사항 (선택)</div>'
     +'<textarea class="q-note-ta" rows="2" placeholder="특이사항이 있으면 입력..." oninput="S.qData.note=this.value">'+esc(note)+'</textarea>'
     +'<div class="qc-confirm">'+dept.icon+' '+dept.name+' '+t.name+' 분임조 활동을<br><b>진행 완료</b>로 기록합니다.</div>'
@@ -1024,7 +1024,11 @@ function loadCached() {
       if (obj.submissions) SS.submissions = obj.submissions;
     }
   } catch(e) {}
+  // 이 기기에 저장된 작성자 이름 복원
+  try { var nm = localStorage.getItem('kims_name'); if (nm) S.name = nm; } catch(e) {}
 }
+// 작성자 이름을 이 기기에 기억
+function saveName(v) { try { localStorage.setItem('kims_name', v); } catch(e) {} }
 
 loadCached();
 loadRecCache();
