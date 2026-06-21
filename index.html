@@ -112,6 +112,15 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 .rec-filter{display:flex;align-items:center;gap:8px;margin-bottom:16px;background:#FFF;border:1px solid #E8E7E2;border-radius:10px;padding:10px 14px;flex-wrap:wrap}
 .rec-filter-lbl{font-size:12px;color:#888;white-space:nowrap}
 .rec-filter-inp{height:36px;background:#FFF;border:1px solid #D0CFC9;border-radius:7px;padding:0 10px;font-family:inherit;font-size:13px;color:#1A1A1A;outline:none;-webkit-appearance:none;flex:1;min-width:120px}
+/* 날짜 이동 화살표 */
+.date-nav{display:flex;align-items:center;gap:6px}
+.date-nav .meta-inp{flex:1}
+.date-arrow{flex-shrink:0;width:40px;height:40px;background:#FFF;border:1px solid #D0CFC9;border-radius:8px;font-size:15px;font-weight:700;color:#1A2535;cursor:pointer;font-family:inherit}
+.date-arrow:active{background:#F0EFE9}
+.rec-filter .date-arrow{width:34px;height:36px;font-size:13px;border-radius:7px}
+/* 토스트 */
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(10px);background:#1E8449;color:#FFF;font-size:14px;font-weight:700;padding:12px 22px;border-radius:24px;box-shadow:0 4px 16px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:600;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .rec-empty{text-align:center;padding:60px 20px;color:#aaa}
 .rec-empty-icon{font-size:40px;margin-bottom:12px}
 .rec-grp{margin-bottom:20px}
@@ -248,6 +257,25 @@ function loadRecords() {
 
 function fmtLocal(d){
   return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+}
+// 날짜 ±n일 이동
+function shiftDate(ds, n){
+  var p=(ds||todayLocal()).split('-');
+  var d=new Date(+p[0], (+p[1]||1)-1, +p[2]||1);
+  d.setDate(d.getDate()+n);
+  return fmtLocal(d);
+}
+// 홈/기록 날짜 화살표
+function homeShiftDate(n){ S.date=shiftDate(S.date,n); loadState().then(showHome); }
+function recShiftDate(n){ S.recDate=shiftDate(S.recDate,n); drawRecs(); }
+// 토스트 메시지
+function showToast(msg){
+  var t=document.getElementById('toast');
+  if(!t){ t=document.createElement('div'); t.id='toast'; t.className='toast'; document.body.appendChild(t); }
+  t.textContent=msg;
+  t.classList.add('show');
+  if(window.__toastT) clearTimeout(window.__toastT);
+  window.__toastT=setTimeout(function(){ t.classList.remove('show'); }, 1800);
 }
 function normDate(raw) {
   if (!raw) return '';
@@ -404,7 +432,9 @@ function showHome() {
     +'<p class="step-sub">날짜·이름 입력 후 시간대·부서를 선택하세요</p>'
     +'<div class="meta-row">'
     +'<div><label class="meta-lbl">활동일</label>'
-    +'<input class="meta-inp" type="date" id="dateInp" value="'+S.date+'" onchange="S.date=this.value;loadState().then(showHome)"></div>'
+    +'<div class="date-nav"><button class="date-arrow" onclick="homeShiftDate(-1)">◀</button>'
+    +'<input class="meta-inp" type="date" id="dateInp" value="'+S.date+'" onchange="S.date=this.value;loadState().then(showHome)">'
+    +'<button class="date-arrow" onclick="homeShiftDate(1)">▶</button></div></div>'
     +'<div><label class="meta-lbl">작성자 이름</label>'
     +'<input class="meta-inp" type="text" id="nameInp" placeholder="이름 입력" value="'+esc(S.name)+'" oninput="S.name=this.value;chkReady()"></div>'
     +'</div>'
@@ -628,12 +658,14 @@ function submitReturn() {
     reason:r.reason, detail:(r.detail||'').trim(), result:r.result,
     submittedAt:new Date().toLocaleString('ko-KR')
   };
-  S.retSession.push({dept:r.dept, name:r.name.trim(), qty:cleanNum(r.qty), amount:cleanNum(r.amount)});
+  var savedName = r.name.trim();
+  S.retSession.push({dept:r.dept, name:savedName, qty:cleanNum(r.qty), amount:cleanNum(r.amount)});
   postSheet(payload, function(){}, function(){});
   // 품목 관련 항목만 초기화(날짜·점포·구분은 유지 → 연속 입력 편리)
   S.ret.item=''; S.ret.code=''; S.ret.name=''; S.ret.qty='1'; S.ret.amount=''; S.ret.receipt=''; S.ret.detail='';
   showReturn();
   window.scrollTo(0,0);
+  showToast('✓ "'+savedName+'" 반품이 등록되었습니다');
 }
 
 // EVENING
@@ -750,8 +782,9 @@ function drawRecs() {
   var recs = SS.records.filter(function(r){ return normDate(r.date) === S.recDate; });
   var html = '<div class="rec-filter">'
     +'<span class="rec-filter-lbl">조회일</span>'
+    +'<button class="date-arrow" onclick="recShiftDate(-1)">◀</button>'
     +'<input type="date" class="rec-filter-inp" value="'+S.recDate+'" onchange="S.recDate=this.value;drawRecs()">'
-    +'<span style="font-size:11px;color:#888;white-space:nowrap">선택일만</span></div>';
+    +'<button class="date-arrow" onclick="recShiftDate(1)">▶</button></div>';
   if (!recs.length) {
     html += '<div class="rec-empty"><div class="rec-empty-icon">📋</div><div>해당 날짜에 기록이 없습니다</div></div>';
   } else {
