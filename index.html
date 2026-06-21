@@ -27,7 +27,7 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 .meta-lbl{display:block;font-size:11px;font-weight:700;color:#444;margin-bottom:5px}
 .meta-inp{width:100%;height:40px;background:#FFF;border:1px solid #D0CFC9;border-radius:8px;padding:0 12px;font-family:inherit;font-size:14px;color:#1A1A1A;outline:none;-webkit-appearance:none}
 .meta-inp:focus{border-color:#D0021B}
-.sec-label{font-size:12px;font-weight:700;color:#1A2535;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #1A2535;display:flex;align-items:center;gap:6px}
+.sec-label{font-size:12px;font-weight:700;color:#1A2535;margin-bottom:10px;padding-bottom:6px;border-bottom:1.5px solid #D8D6CF;display:flex;align-items:center;gap:6px}
 .sec-tag{font-size:10px;font-weight:700;border-radius:4px;padding:2px 7px;color:#FFF;background:#D0021B}
 .sec-tag.pm{background:#2E4A7A}
 .sbadge{display:inline-block;font-size:10px;font-weight:700;border-radius:20px;padding:2px 8px;margin-top:5px}
@@ -35,23 +35,24 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 .sbadge.undone{background:#FEF5E4;color:#B7770D}
 /* 품질 분임조 시간대 그룹 */
 .qt-group{margin-bottom:12px}
-.qt-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:5px;border-bottom:2px solid #1A2535}
+.qt-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid #E2E0D9}
 .qt-icon{font-size:18px}
 .qt-name{font-size:15px;font-weight:900;color:#1A2535}
 .qt-cnt{margin-left:auto;font-size:11px;color:#888}
 .eve-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
 /* 시간대별 부서 4칸 한 줄 */
 .qt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
-.qt-grid .eve-card{padding:20px 3px 9px}
+.qt-grid .eve-card{padding:15px 4px 11px}
 .qt-grid .eve-name{font-size:13px}
-.qt-badge{position:absolute;top:4px;right:4px;font-size:8px;font-weight:700;padding:1px 5px;border-radius:20px;line-height:1.4}
-.qt-badge.done{background:#E8F8EE;color:#1E8449}
-.qt-badge.undone{background:#FEF5E4;color:#B7770D}
+.qt-badge{position:absolute;top:6px;right:6px;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;line-height:1}
+.qt-badge.done{background:#27AE60;color:#FFF}
+.qt-badge.undone{background:transparent;border:1.5px solid #DCDAD3;color:transparent}
 .eve-card{background:#FFF;border:1.5px solid #E0DFD9;border-radius:10px;padding:9px 10px;cursor:pointer;text-align:center;position:relative;transition:border-color .15s}
 .eve-card:hover{border-color:#aaa}
 .eve-card.sel{border-color:#2E4A7A;background:#F0F4FC}
-.eve-card.sub{border-color:#2E4A7A;background:#E8EEF9}
-.eve-card.q.sub{border-color:#D0021B;background:#FFF5F5}
+.eve-card.sub{border-color:#CBE9D3;background:#F5FBF6}
+.eve-card.q{border-color:#E5E4DF}
+.eve-card.q.sub{border-color:#CBE9D3;background:#F5FBF6}
 .eve-icon{font-size:22px;display:block;margin-bottom:2px;line-height:1}
 .eve-name{font-size:13px;font-weight:700;color:#1A1A1A;margin-bottom:1px}
 .eve-cnt{font-size:10px;color:#888;line-height:1.2}
@@ -126,7 +127,7 @@ main{max-width:720px;margin:0 auto;padding:16px 14px 90px}
 .rec-grp{margin-bottom:20px}
 .rec-grp-hdr{font-size:12px;font-weight:700;color:#888;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #E8E7E2}
 .rec-sec{margin-bottom:18px}
-.rec-sec-hdr{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:900;color:#1A2535;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid #1A2535}
+.rec-sec-hdr{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:900;color:#1A2535;margin-bottom:8px;padding-bottom:6px;border-bottom:1.5px solid #D8D6CF}
 .rec-sec-cnt{margin-left:auto;font-size:11px;font-weight:700;color:#888}
 .rec-sec-empty{font-size:12px;color:#bbb;padding:6px 2px 10px}
 .ret-cnt{margin-top:4px;background:#FFF;border:1px solid #E8E7E2;border-radius:12px;padding:14px 16px}
@@ -412,7 +413,7 @@ function showHome() {
       var d = DEPTS[di];
       var sub = isSub('quality', t.id+'_'+d.id, S.date);
       if (sub) doneCnt++;
-      var badge = sub ? '<div class="qt-badge done">✓ 제출</div>' : '<div class="qt-badge undone">미제출</div>';
+      var badge = sub ? '<div class="qt-badge done">✓</div>' : '<div class="qt-badge undone"></div>';
       cards += '<div class="eve-card q'+(sub?' sub':'')+'" onclick="openQuality(\''+t.id+'\',\''+d.id+'\')">'
         + badge
         + '<span class="eve-icon">'+d.icon+'</span>'
@@ -429,7 +430,7 @@ function showHome() {
     var ed = EVE_DEPTS[i];
     var photos = S.evePhotos[ed.id] || [];
     var esub = isSub('evening', ed.id, S.date);
-    var ebadge = esub ? '<div class="eve-badge done">✓ 제출완료</div>' : '<div class="eve-badge undone">● 미제출</div>';
+    var ebadge = esub ? '<div class="qt-badge done">✓</div>' : '<div class="qt-badge undone"></div>';
     var ecls = 'eve-card' + (S.eveDept===ed.id?' sel':'') + (esub?' sub':'');
     eveHtml += '<div class="'+ecls+'" onclick="selEve(\''+ed.id+'\')">'
       + ebadge
